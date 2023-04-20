@@ -1,20 +1,32 @@
 package com.wwan13.cpuscheduler.Processes;
 
+/**
+ * Process Class
+ */
 public class Process {
 
-    private String processId;
+    private String processId;       // 프로세스 id
 
-    private Integer arrivalTime;
+    private Integer arrivalTime;    // 도착시간
 
-    private Integer serviceTime;
+    private Integer serviceTime;    // 서비스 시간
 
-    private Integer priority;
+    private Integer priority;       // 우선순위
+
+    private Integer waitTime;       // 대기시간
+
+    private Integer responseTime;   // 응답시간
+
+    private Integer turnAroundTime; // 반환시간
 
     public Process(String processId, Integer arrivalTime, Integer serviceTime, Integer priority) {
         this.processId = processId;
         this.arrivalTime = arrivalTime;
         this.serviceTime = serviceTime;
         this.priority = priority;
+        this.waitTime = null;
+        this.responseTime = null;
+        this.turnAroundTime = null;
     }
 
     public String getProcessId() {
@@ -47,5 +59,29 @@ public class Process {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public Integer getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(Integer waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public Integer getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Integer responseTime) {
+        this.responseTime = responseTime;
+    }
+
+    public Integer getTurnAroundTime() {
+        return turnAroundTime;
+    }
+
+    public void setTurnAroundTime(Integer turnAroundTime) {
+        this.turnAroundTime = turnAroundTime;
     }
 }
