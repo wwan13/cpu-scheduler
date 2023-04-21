@@ -11,8 +11,8 @@
     <div class="entire-wrap">    
         <div class="main-wrap">
             <div class="algorithm-select">
-                <button class="algorithm-list clicked">FCFC</button>
-                <button class="algorithm-list">SFJ</button>
+                <button class="algorithm-list clicked">FCFS</button>
+                <button class="algorithm-list">SJF</button>
                 <button class="algorithm-list"><div>PRIORITY</div><div>비선점</div></button>
                 <button class="algorithm-list"><div>PRIORITY</div><div>선점</div></button>
                 <button class="algorithm-list">RR</button>
@@ -22,9 +22,27 @@
 
             <div class="main-contents">
                 <div class="algorithm-name-wrap">
-                    <p class="algorithm-name">FCFS</p>
-                    <p class="algorithm-name">ALGORITHM</p>
+                    <p class="algorithm-name">First Come First Served</p>
+                    <p class="algorithm-name">Algorithm</p>
                 </div>
+                <div class="input-each">
+                    <p class="input-description">PID</p>
+                    <p class="input-description">Arrival Time</p>
+                    <p class="input-description">Service Time</p>
+                    <p class="input-description">Priority</p>
+                    <p class="input-description"></p>
+                </div>
+                <form class="main-form" action="">
+                    <div class="input-each">
+                        <input type="text" class="input-box">
+                        <input type="text" class="input-box">
+                        <input type="text" class="input-box">
+                        <input type="text" class="input-box">
+                        <button class="delete-button">-</button>
+                    </div>
+                    <button class="add-button">+</button>
+                </form>
+                <button class="submit-button">SCHEDULE</button>
             </div>
         </div>
     </div>

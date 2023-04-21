@@ -36,11 +36,12 @@
     font-size: 12px;
     list-style-type: none;
     
+    color: #1c1b1a;
     background-color: #ecedf2;
     border: 0;
     border-radius: 10px 10px 0px 0px;
     box-shadow: 2px -4px 14px rgba(1, 1, 1, 0.07);
-    transition: .3s;
+    transition: .2s;
 }
 
 .algorithm-list:hover {
@@ -57,6 +58,11 @@
 .main-contents {
     height: 550px;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
     border-radius: 0px 0px 5px 5px;
     box-shadow: 2px 4px 14px rgba(1, 1, 1, 0.07);
     background-color: #f5f5f5;
@@ -64,7 +70,6 @@
 
 .algorithm-name-wrap {
     height: 160px;
-    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,4 +79,83 @@
 .algorithm-name {
     font-size: 30px;
     font-weight: 600;
+    color: #1c1b1a;
+}
+
+.main-form {
+    width: 450px;
+    height: 260px;
+    overflow: scroll;
+    /* background-color: beige; */
+}
+
+.input-each {
+    width: 450px;
+    display: flex;
+    flex-direction: row;
+}
+
+.input-description {
+    width: 90px;
+    height: 35px;
+
+    text-align: center;
+    line-height: 30px;
+    font-size: 12px;
+    color: #b8b9c1;
+}
+
+.input-box {
+    width: 80px;
+    height: 35px;
+
+    margin: 5px;
+
+    box-sizing: border-box;
+}
+
+.delete-button {
+    width: 50px;
+    height: 35px;
+
+    margin: 5px 5px 5px 35px;
+
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: dotted 2px #b8b9c1;
+    color: #b8b9c1;
+    background-color: #f5f5f5;
+}
+
+.add-button {
+    width: 440px;
+    height: 35px;
+
+    margin: 20px 5px 0px 5px;
+
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: dotted 2px #b8b9c1;
+    color: #b8b9c1;
+    background-color: #f5f5f5;
+}
+
+.submit-button {
+    width: 440px;
+    height: 40px;
+
+    border: solid 2px #79Bac0;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    font-weight: 500;
+    color: #1c1b1a;
+
+    margin: 20px 0px 60px 0px;
+
+    transition: .2s;
+}
+
+.submit-button:hover {
+    color: #f5f5f5;
+    background-color: #79Bac0;
 }

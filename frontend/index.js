@@ -20,9 +20,19 @@ function handleClick(event) {
 
         var algorithmName = target.innerHTML
         if (algorithmName === "<div>PRIORITY</div><div>비선점</div>") {
-            algorithmName = "비선점 PRIORITY"
+            algorithmName = "Non-Preemptive Priority"
         } else if (algorithmName === "<div>PRIORITY</div><div>선점</div>"){
-            algorithmName = "선점 PRIORITY"
+            algorithmName = "Preemptive Priority"
+        } else if (algorithmName === "FCFS" ) {
+            algorithmName = "First Come First Served"
+        } else if (algorithmName === "SJF" ) {
+            algorithmName = "Shortest Job First"
+        } else if (algorithmName === "SRT" ) {
+            algorithmName = "Shortest Remaining Time"
+        } else if (algorithmName === "HRN" ) {
+            algorithmName = "Highest Response ratio Next"
+        } else if (algorithmName === "RR" ) {
+            algorithmName = "Round Robin"
         }
 
         var algorithmNameDom = document.getElementsByClassName("algorithm-name")[0]
@@ -37,4 +47,4 @@ function init() {
     }
 }
 
-init()
+init();
