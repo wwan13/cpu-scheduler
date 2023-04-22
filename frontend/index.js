@@ -1,6 +1,11 @@
 var btnList = document.getElementsByClassName("algorithm-list");
 var algorithmType = "FCFS"
 
+var addButton = document.getElementsByClassName("add-button")[0];
+var deleteButton = document.getElementsByClassName("delete-button")[0];
+var targetItem = document.getElementsByClassName("input-each")[1]
+var numberOfItems = 1
+
 function handleClick(event) {
 
     if (event.target.classList.length === 0) {
@@ -41,10 +46,34 @@ function handleClick(event) {
     }
 }
 
+function addButtonHandleClick(event) {
+    numberOfItems += 1;
+    displayInnerContents(numberOfItems)
+}
+
+function deleteButtonHandleClick(event) {
+    numberOfItems -= 1;
+    displayInnerContents(numberOfItems)
+}
+
+function displayInnerContents(numberOfItems) {
+    var inputWrap = document.getElementsByClassName("input-wrap")[0];
+    
+    console.log(targetItem)
+    console.log(inputWrap.firstElementChild)
+
+    for (var i = 1; i < numberOfItems; i++) {
+        inputWrap.insertBefore(targetItem, inputWrap.firstElementChild);
+        console.log(inputWrap)
+    }
+}
+
 function init() {
     for (var i = 0; i < btnList.length; i++) {
         btnList[i].addEventListener("click", handleClick);
     }
+    addButton.addEventListener("click", addButtonHandleClick);
+    deleteButton.addEventListener("click", deleteButtonHandleClick);
 }
 
 init();
