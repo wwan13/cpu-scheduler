@@ -7,6 +7,8 @@ import java.util.List;
  * 스케줄링 결과를 Client 로 보내기 위한 클래스
  */
 public class ResponseDto {
+    
+    private String algorithmType;                       // 알고리즘 종료
 
     private List<Process> processes;                    // 프로세스 리스트
 

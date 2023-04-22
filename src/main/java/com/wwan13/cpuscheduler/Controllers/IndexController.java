@@ -12,7 +12,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String scheduler() {
-        return "scheduler";
+        return "index";
     }
 
 }
