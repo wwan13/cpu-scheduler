@@ -1,13 +1,14 @@
 package com.wwan13.cpuscheduler.SchedulingAlgorithms;
 
 import com.wwan13.cpuscheduler.Processes.Process;
+import com.wwan13.cpuscheduler.Processes.ResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class FcfsAlgorithmTest {
@@ -27,7 +28,11 @@ class FcfsAlgorithmTest {
         List<Process> processes = makeTestProcesses();
 
         FcfsAlgorithm fcfsAlgorithm = new FcfsAlgorithm(processes);
-        fcfsAlgorithm.schedule();
+        ResponseDto response = fcfsAlgorithm.schedule();
+
+        assertThat(response.getAlgorithmType()).isEqualTo("FCFS");
+        assertThat(response.getAWT()).isEqualTo(23);
+        assertThat(response.getATT()).isEqualTo(42);
     }
 
 }
