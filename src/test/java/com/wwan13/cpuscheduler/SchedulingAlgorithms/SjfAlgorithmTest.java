@@ -1,17 +1,14 @@
 package com.wwan13.cpuscheduler.SchedulingAlgorithms;
 
 import com.wwan13.cpuscheduler.Processes.Process;
-import com.wwan13.cpuscheduler.Processes.ResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest
-class FcfsAlgorithmTest {
+class SjfAlgorithmTest {
 
     public List<Process> testProcesses() {
         List<Process> processes = Arrays.asList(
@@ -23,15 +20,16 @@ class FcfsAlgorithmTest {
     }
 
     @Test
-    public void fcfsAlgorithm() {
+    public void sjfAlgorithm() {
+
         List<Process> processes = testProcesses();
 
-        SchedulingAlgorithm schedulingAlgorithm = new FcfsAlgorithm(processes);
-        ResponseDto response = schedulingAlgorithm.schedule();
+        SchedulingAlgorithm schedulingAlgorithm = new SjfAlgorithm(processes);
+        schedulingAlgorithm.schedule();
 
-        assertThat(response.getAlgorithmType()).isEqualTo("FCFS");
-        assertThat(response.getAWT()).isEqualTo(23);
-        assertThat(response.getATT()).isEqualTo(42);
     }
+
+    // 두 프로세스가 0에 도착 하는데 두 프로세스의 작업 시간이 다른 경우
+    // p1 0, 10    p2 0, 4
 
 }

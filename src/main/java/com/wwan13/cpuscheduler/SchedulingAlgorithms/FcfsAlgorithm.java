@@ -4,9 +4,7 @@ import com.wwan13.cpuscheduler.Processes.Process;
 import com.wwan13.cpuscheduler.Processes.ResponseDto;
 import com.wwan13.cpuscheduler.Processes.ScheduledData;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -74,11 +72,10 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
     @Override
     public double getAWT() {
 
-        Integer sumOfWaitTimes = this.processes.stream()
-                .map(Process::getWaitTime)
-                .reduce(0, (n1, n2) -> n1 + n2);
-
-        Integer AWT = sumOfWaitTimes / this.processes.size();
+        Double AWT = this.processes.stream()
+                .mapToInt(Process::getWaitTime)
+                .average()
+                .getAsDouble();
 
         return AWT;
 
@@ -92,11 +89,10 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
     @Override
     public double getATT() {
 
-        Integer sumOfTurnAroundTimes = this.processes.stream()
-                .map(Process::getTurnAroundTime)
-                .reduce(0, (n1, n2) -> n1 + n2);
-
-        Integer ATT = sumOfTurnAroundTimes / this.processes.size();
+        Double ATT = this.processes.stream()
+                .mapToInt(Process::getTurnAroundTime)
+                .average()
+                .getAsDouble();
 
         return ATT;
 
