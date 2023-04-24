@@ -13,10 +13,10 @@ public interface SchedulingAlgorithm {
 
     public ResponseDto schedule();
 
-    public double getAWT(List<Process> processes);
+    public double getAWT();
 
-    public double getATT(List<Process> processes);
+    public double getATT();
 
-    public double getART(List<Process> processes);
+    public double getART();
 
 }

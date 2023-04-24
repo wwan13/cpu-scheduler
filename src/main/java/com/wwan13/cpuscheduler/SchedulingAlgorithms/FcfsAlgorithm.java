@@ -37,11 +37,11 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
             currentTime += currentProcess.getServiceTime();
         }
 
-        // TODO
-        // 프로세스별 반환시간, 프로세스별 대기시간 구하기
-
         for (ScheduledData scheduledData : scheduledResult) {
+            Process process = scheduledData.getProcess();
 
+            process.setWaitTime(scheduledData.getStartAt() - process.getArrivalTime());
+            process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
         }
 
         ResponseDto responseDto = new ResponseDto();
@@ -51,17 +51,33 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
     }
 
     @Override
-    public double getAWT(List<Process> processes) {
-        return 0;
+    public double getAWT() {
+
+        Integer sumOfWaitTimes = this.processes.stream()
+                .map(Process::getWaitTime)
+                .reduce(0, (n1, n2) -> n1 + n2);
+
+        Integer AWT = sumOfWaitTimes / this.processes.size();
+
+        return AWT;
+
     }
 
     @Override
-    public double getATT(List<Process> processes) {
-        return 0;
+    public double getATT() {
+
+        Integer sumOfTurnAroundTimes = this.processes.stream()
+                .map(Process::getTurnAroundTime)
+                .reduce(0, (n1, n2) -> n1 + n2);
+
+        Integer ATT = sumOfTurnAroundTimes / this.processes.size();
+
+        return ATT;
+
     }
 
     @Override
-    public double getART(List<Process> processes) {
+    public double getART() {
         return 0;
     }
 }
