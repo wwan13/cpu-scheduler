@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface SchedulingAlgorithm {
 
-    public ResponseDto schedule(List<Process> processes, Integer timeSlice);
+    public ResponseDto schedule();
 
     public double getAWT(List<Process> processes);
 

@@ -18,4 +18,27 @@ public class ScheduledData {
         this.endAt = endAt;
     }
 
+    public Process getProcess() {
+        return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
+    }
+
+    public Integer getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(Integer startAt) {
+        this.startAt = startAt;
+    }
+
+    public Integer getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(Integer endAt) {
+        this.endAt = endAt;
+    }
 }
