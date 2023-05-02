@@ -59,11 +59,7 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
         }
 
         // 스케줄링 결과를 바탕으로 프로세스별 대기시간, 반환시간 계산
-        for (ScheduledData scheduledData : scheduledResult) {
-            Process process = scheduledData.getProcess();
-            process.setWaitTime(scheduledData.getStartAt() - process.getArrivalTime());
-            process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
-        }
+        this.calculatePerProcesses(scheduledResult);
 
         // 결과 반환을 위한 DTO
         ResponseDto responseDto = ResponseDto.builder()
@@ -111,5 +107,17 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
                         .thenComparing(Process::getServiceTime))
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException());
+    }
+
+    /**
+     * 프로세스별 대기시간, 반환시간, 응답시간을 계산하는 메서드
+     * @param scheduledResult
+     */
+    private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
+        for (ScheduledData scheduledData : scheduledResult) {
+            Process process = scheduledData.getProcess();
+            process.setWaitTime(scheduledData.getStartAt() - process.getArrivalTime());
+            process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
+        }
     }
 }
