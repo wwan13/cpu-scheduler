@@ -59,52 +59,9 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
         responseDto.setAlgorithmType("FCFS");
         responseDto.setProcesses(this.processes);
         responseDto.setScheduledDataList(scheduledResult);
-        responseDto.setAWT(this.getAWT());
-        responseDto.setATT(this.getATT());
+        responseDto.setAWT(Awt.calculate(this.processes));
+        responseDto.setATT(Att.calculate(this.processes));
 
         return responseDto;
-    }
-
-    /**
-     * FCFS 알고리즘의 평군 대기시간을 계산하는 메서드
-     * @return double
-     */
-    @Override
-    public double getAWT() {
-
-        Double AWT = this.processes.stream()
-                .mapToInt(Process::getWaitTime)
-                .average()
-                .getAsDouble();
-
-        return AWT;
-
-    }
-
-
-    /**
-     * FCFS 알고리즘의 평군 반환시간을 계산하는 메서드
-     * @return double
-     */
-    @Override
-    public double getATT() {
-
-        Double ATT = this.processes.stream()
-                .mapToInt(Process::getTurnAroundTime)
-                .average()
-                .getAsDouble();
-
-        return ATT;
-
-    }
-
-
-    /**
-     * FCFS 알고리즘의 평군 응답시간을 계산하는 메서드
-     * @return double
-     */
-    @Override
-    public double getART() {
-        return 0;
     }
 }

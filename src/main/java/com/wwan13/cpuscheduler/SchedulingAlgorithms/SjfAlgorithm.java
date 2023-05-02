@@ -28,27 +28,18 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
         Integer currentTime = 0;                                        // 현재 시간을 저장하는 변수
         List<ScheduledData> scheduledResult = new ArrayList<>();        // 스줄링 결과를 단계별로 저장할 리스트
 
-        // 가장 먼저 스케줄링될 프로세스 (도착 시간이 가장 빠르고, 서비스 시간이 가장 작은) 선택
-        Process firstArrivalProcess = this.processes.stream()
-                .sorted(Comparator.comparing(Process::getArrivalTime)
-                        .thenComparing(Process::getServiceTime))
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException());
+        // 가장 먼저 스케줄링될 프로세스
+        Process firstScheduledProcess = this.getFirstScheduledProcess();
 
         // 두 번째로 스케줄링 될 프로세스들을 서비스 시간(같다면 먼저 도착한 것 부터)으로 정렬
         List<Process> sortedProcesses = this.processes.stream()
-                .filter(a -> !a.equals(firstArrivalProcess))
-                .sorted(Comparator.comparing(Process::getServiceTime)
-                        .thenComparing(Process::getArrivalTime))
+                .filter(a -> !a.equals(firstScheduledProcess))          // 첫번째로 스케줄링되는 프로세스는 제외
+                .sorted(Comparator.comparing(Process::getServiceTime)   // 서비스 시간 기준 정렬
+                        .thenComparing(Process::getArrivalTime))        // 같다면 도착 시간 기준 정렬
                 .collect(Collectors.toList());
 
         // 첫 번째 프로세스를 큐의 가장 앞에 넣음
-        sortedProcesses.add(0, firstArrivalProcess);
-
-        for (Process p: sortedProcesses) {
-            System.out.println(p.getProcessId());
-            System.out.println(p.getServiceTime());
-        }
+        sortedProcesses.add(0, firstScheduledProcess);
 
         // 모든 프로세스가 스케줄링 완료될 때 까지 반복
         while(!sortedProcesses.isEmpty()) {
@@ -62,24 +53,23 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
 
             // 현재 시간 동기화
             currentTime += currentProcess.getServiceTime();
+
         }
 
         return null;
 
     }
 
-    @Override
-    public double getAWT() {
-        return 0;
-    }
-
-    @Override
-    public double getATT() {
-        return 0;
-    }
-
-    @Override
-    public double getART() {
-        return 0;
+    /**
+     * 가장 먼저 스케줄링되는 프로세스를 반환하는 메서드
+     * 도착 시간이 가장 빠르고, 도착 시간이 같다면 서비스 시간이 더 작은 프로세스
+     * @return Process
+     */
+    private Process getFirstScheduledProcess() {
+        return this.processes.stream()
+                .sorted(Comparator.comparing(Process::getArrivalTime)
+                        .thenComparing(Process::getServiceTime))
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException());
     }
 }
