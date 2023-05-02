@@ -3,6 +3,7 @@ package com.wwan13.cpuscheduler.SchedulingAlgorithms;
 import com.wwan13.cpuscheduler.Processes.Process;
 import com.wwan13.cpuscheduler.Processes.ResponseDto;
 import com.wwan13.cpuscheduler.Processes.ScheduledData;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,13 +15,14 @@ import java.util.stream.Stream;
 /**
  * SJF 알고르즘
  */
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SjfAlgorithm implements SchedulingAlgorithm{
 
     private List<Process> processes;
-
-    public SjfAlgorithm(List<Process> processes) {
-        this.processes = processes;
-    }
 
     @Override
     public ResponseDto schedule() {

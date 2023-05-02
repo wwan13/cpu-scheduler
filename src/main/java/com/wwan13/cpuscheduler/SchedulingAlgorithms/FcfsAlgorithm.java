@@ -5,6 +5,7 @@ import com.wwan13.cpuscheduler.Commons.Awt;
 import com.wwan13.cpuscheduler.Processes.Process;
 import com.wwan13.cpuscheduler.Processes.ResponseDto;
 import com.wwan13.cpuscheduler.Processes.ScheduledData;
+import lombok.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,13 +13,14 @@ import java.util.stream.Collectors;
 /**
  * FCFS 알고리즘
  */
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FcfsAlgorithm implements SchedulingAlgorithm{
 
     private List<Process> processes;
-
-    public FcfsAlgorithm(List<Process> processes) {
-        this.processes = processes;
-    }
 
     /**
      * FCFS 스케줄링이 이뤄지는 메서드
