@@ -50,7 +50,11 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
             Process currentProcess = sortedProcesses.remove(0);
 
             // 어느 프로세스가 언제부터 언제까지 스케줄링 되었는지 계산 후 리스트에 넣음
-            ScheduledData scheduledData = new ScheduledData(currentProcess, currentTime, currentTime + currentProcess.getServiceTime());
+            ScheduledData scheduledData = ScheduledData.builder()
+                    .process(currentProcess)
+                    .startAt(currentTime)
+                    .endAt(currentTime + currentProcess.getServiceTime())
+                    .build();
             scheduledResult.add(scheduledData);
 
             // 현재 시간 동기화

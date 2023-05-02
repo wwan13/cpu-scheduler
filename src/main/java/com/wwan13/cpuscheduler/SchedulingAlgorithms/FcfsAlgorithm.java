@@ -44,7 +44,11 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
             Process currentProcess = sortedProcesses.remove(0);
 
             // 어느 프로세스가 언제부터 언제까지 스케줄링 되었는지 계산 후 리스트에 넣음
-            ScheduledData scheduledData = new ScheduledData(currentProcess, currentTime, currentTime + currentProcess.getServiceTime());
+            ScheduledData scheduledData = ScheduledData.builder()
+                    .process(currentProcess)
+                    .startAt(currentTime)
+                    .endAt(currentTime + currentProcess.getServiceTime())
+                    .build();
             scheduledResult.add(scheduledData);
 
             // 현재 시간 동기화
@@ -59,12 +63,13 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
         }
 
         // 결과 반환을 위한 DTO
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setAlgorithmType("FCFS");
-        responseDto.setProcesses(this.processes);
-        responseDto.setScheduledDataList(scheduledResult);
-        responseDto.setAWT(Awt.calculate(this.processes));
-        responseDto.setATT(Att.calculate(this.processes));
+        ResponseDto responseDto = ResponseDto.builder()
+                .algorithmType("FCFS")
+                .processes(this.processes)
+                .scheduledDataList(scheduledResult)
+                .AWT(Awt.calculate(this.processes))
+                .ATT(Att.calculate(this.processes))
+                .build();
 
         return responseDto;
     }
