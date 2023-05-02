@@ -1,5 +1,7 @@
 package com.wwan13.cpuscheduler.SchedulingAlgorithms;
 
+import com.wwan13.cpuscheduler.Commons.Att;
+import com.wwan13.cpuscheduler.Commons.Awt;
 import com.wwan13.cpuscheduler.Processes.Process;
 import com.wwan13.cpuscheduler.Processes.ResponseDto;
 import com.wwan13.cpuscheduler.Processes.ScheduledData;

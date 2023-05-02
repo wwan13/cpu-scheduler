@@ -1,4 +1,4 @@
-package com.wwan13.cpuscheduler.SchedulingAlgorithms;
+package com.wwan13.cpuscheduler.Commons;
 
 import com.wwan13.cpuscheduler.Processes.Process;
 
