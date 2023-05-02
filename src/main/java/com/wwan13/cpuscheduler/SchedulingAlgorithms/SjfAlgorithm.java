@@ -1,5 +1,7 @@
 package com.wwan13.cpuscheduler.SchedulingAlgorithms;
 
+import com.wwan13.cpuscheduler.Commons.Att;
+import com.wwan13.cpuscheduler.Commons.Awt;
 import com.wwan13.cpuscheduler.Processes.Process;
 import com.wwan13.cpuscheduler.Processes.ResponseDto;
 import com.wwan13.cpuscheduler.Processes.ScheduledData;
@@ -13,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * SJF 알고르즘
+ * SJF 알고리즘
  */
 @Builder
 @Getter
@@ -24,6 +26,10 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
 
     private List<Process> processes;
 
+    /**
+     * SFJ 스케줄링을 실행하는 메서드
+     * @return ResponseDto
+     */
     @Override
     public ResponseDto schedule() {
 
@@ -62,7 +68,23 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
 
         }
 
-        return null;
+        // 스케줄링 결과를 바탕으로 프로세스별 대기시간, 반환시간 계산
+        for (ScheduledData scheduledData : scheduledResult) {
+            Process process = scheduledData.getProcess();
+            process.setWaitTime(scheduledData.getStartAt() - process.getArrivalTime());
+            process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
+        }
+
+        // 결과 반환을 위한 DTO
+        ResponseDto responseDto = ResponseDto.builder()
+                .algorithmType("SJF")
+                .processes(this.processes)
+                .scheduledDataList(scheduledResult)
+                .AWT(Awt.calculate(this.processes))
+                .ATT(Att.calculate(this.processes))
+                .build();
+
+        return responseDto;
 
     }
 

@@ -14,12 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FcfsAlgorithmTest {
 
     public List<Process> testProcesses() {
-        List<Process> processes = Arrays.asList(
-                new Process("P1", 0, 30, 1),
-                new Process("P3", 6, 9, 2),
-                new Process("P2", 3, 18, 3)
+        return Arrays.asList(
+                Process.builder().processId("P1").arrivalTime(0).serviceTime(30).priority(1).build(),
+                Process.builder().processId("P3").arrivalTime(6).serviceTime(9).priority(1).build(),
+                Process.builder().processId("P2").arrivalTime(3).serviceTime(18).priority(1).build()
         );
-        return processes;
     }
 
     @Test

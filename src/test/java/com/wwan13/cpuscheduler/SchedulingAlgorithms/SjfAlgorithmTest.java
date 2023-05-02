@@ -1,6 +1,8 @@
 package com.wwan13.cpuscheduler.SchedulingAlgorithms;
 
 import com.wwan13.cpuscheduler.Processes.Process;
+import com.wwan13.cpuscheduler.Processes.ResponseDto;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -11,12 +13,11 @@ import java.util.List;
 class SjfAlgorithmTest {
 
     public List<Process> testProcesses() {
-        List<Process> processes = Arrays.asList(
-                new Process("P1", 0, 30, 1),
-                new Process("P3", 6, 9, 2),
-                new Process("P2", 3, 18, 3)
+        return Arrays.asList(
+                Process.builder().processId("P1").arrivalTime(0).serviceTime(30).priority(1).build(),
+                Process.builder().processId("P3").arrivalTime(6).serviceTime(9).priority(1).build(),
+                Process.builder().processId("P2").arrivalTime(3).serviceTime(18).priority(1).build()
         );
-        return processes;
     }
 
     @Test
@@ -25,11 +26,29 @@ class SjfAlgorithmTest {
         List<Process> processes = testProcesses();
 
         SchedulingAlgorithm schedulingAlgorithm = new SjfAlgorithm(processes);
-        schedulingAlgorithm.schedule();
+        ResponseDto responseDto = schedulingAlgorithm.schedule();
+
+
+        Assertions.assertThat(responseDto.getAlgorithmType()).isEqualTo("SJF");
+        Assertions.assertThat(responseDto.getScheduledDataList().get(0).getProcess())
+                .isEqualTo(processes.get(0));
 
     }
 
-    // 두 프로세스가 0에 도착 하는데 두 프로세스의 작업 시간이 다른 경우
-    // p1 0, 10    p2 0, 4
+    @Test
+    public void sjfAlgorithm_sameTimeArrive_differentServiceTIme() {
+
+        List<Process> processes = Arrays.asList(
+                Process.builder().processId("P1").arrivalTime(0).serviceTime(30).priority(1).build(),
+                Process.builder().processId("P3").arrivalTime(0).serviceTime(9).priority(1).build(),
+                Process.builder().processId("P2").arrivalTime(3).serviceTime(18).priority(1).build()
+        );
+
+        SchedulingAlgorithm schedulingAlgorithm = new SjfAlgorithm(processes);
+        ResponseDto responseDto = schedulingAlgorithm.schedule();
+
+        Assertions.assertThat(responseDto.getScheduledDataList().get(0).getProcess())
+                .isEqualTo(processes.get(1));
+    }
 
 }
