@@ -1,5 +1,7 @@
 package com.wwan13.cpuscheduler.SchedulingAlgorithms;
 
+import com.wwan13.cpuscheduler.Commons.Att;
+import com.wwan13.cpuscheduler.Commons.Awt;
 import com.wwan13.cpuscheduler.Processes.Process;
 import com.wwan13.cpuscheduler.Processes.ResponseDto;
 import com.wwan13.cpuscheduler.Processes.ScheduledData;
@@ -62,7 +64,16 @@ public class RrAlgorithm implements SchedulingAlgorithm{
 
         this.calculatePerProcesses(scheduledResult);
 
-        return null;
+        // 결과 반환을 위한 DTO
+        ResponseDto responseDto = ResponseDto.builder()
+                .algorithmType("RR")
+                .processes(this.processes)
+                .scheduledDataList(scheduledResult)
+                .AWT(Awt.calculate(this.processes))
+                .ATT(Att.calculate(this.processes))
+                .build();
+
+        return responseDto;
     }
 
 
@@ -83,13 +94,11 @@ public class RrAlgorithm implements SchedulingAlgorithm{
      */
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
         for (ScheduledData scheduledData : scheduledResult) {
+            Process process = scheduledData.getProcess();
+            Integer serviceTime = scheduledData.getEndAt() - scheduledData.getStartAt();
 
-            System.out.println(scheduledData.getProcess().getProcessId());
-            System.out.println(scheduledData.getStartAt());
-            System.out.println(scheduledData.getEndAt() + "\n");
-//            Process process = scheduledData.getProcess();
-//            process.setWaitTime(scheduledData.getStartAt() - process.getArrivalTime());
-//            process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
+            process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
+            process.setWaitTime(scheduledData.getStartAt() - serviceTime);
         }
     }
 
