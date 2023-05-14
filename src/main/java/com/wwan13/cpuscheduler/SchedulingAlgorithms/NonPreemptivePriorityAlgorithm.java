@@ -41,6 +41,11 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
             // 도착 시간으로 정렬 하였기 때문에, 가장 먼저 도착한 프로세스를 가져오고, 기존 리스트에서 삭제
             Process currentProcess = readyQueue.remove(0);
 
+            // 프로세스의 도착시간이 지금 현재 시간보다 빠르다면 프로세스의 도착시간으로 현재 시간을 변경
+            if (currentProcess.getArrivalTime() > currentTime) {
+                currentTime = currentProcess.getArrivalTime();
+            }
+
             // 어느 프로세스가 언제부터 언제까지 스케줄링 되었는지 계산 후 리스트에 넣음
             ScheduledData scheduledData = ScheduledData.builder()
                     .process(currentProcess)
