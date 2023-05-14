@@ -1,7 +1,15 @@
-## Operating System Project : Cpu Scheduler
-- Language : Java
+# CPU SCHEDULER
+> 운영체제 과목 프로젝트
 
-### RULE
+### Language & Tools
+- Java 11
+- Spring-Boot 2.7.7
+- Lombok
+- Thymeleaf
+- Html / Css / Javascript
+- Junit 4
+
+### Rules
 - Algorithms : FCFS, SFJ, 비선점 Priority, 선점 Priority, RR, SRT, HRN
 - 입력(반드시 순서 지킬것/우선순위 숫자가 작을수록 우선순위 높게)
   - (프로세스 수), 프로세스 ID, 도착시간, 서비스시간, 우선순위, 시간할당량
