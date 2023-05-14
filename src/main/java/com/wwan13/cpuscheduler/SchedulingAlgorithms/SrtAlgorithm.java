@@ -12,15 +12,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Round Robin 알고리즘
- */
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RrAlgorithm implements SchedulingAlgorithm{
+public class SrtAlgorithm implements SchedulingAlgorithm{
 
     private List<Process> processes;
     private Integer timeSlice;
@@ -74,8 +71,8 @@ public class RrAlgorithm implements SchedulingAlgorithm{
                 .build();
 
         return responseDto;
-    }
 
+    }
 
     /**
      * 초기 ReadyQueue 를 반환하는 메서드
@@ -93,20 +90,12 @@ public class RrAlgorithm implements SchedulingAlgorithm{
      * @param scheduledResult
      */
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
-        // 반환시간 계산
         for (ScheduledData scheduledData : scheduledResult) {
             Process process = scheduledData.getProcess();
+            Integer serviceTime = scheduledData.getEndAt() - scheduledData.getStartAt();
+
             process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
-        }
-
-        // 대기시간 계산 (반환시간 - 전체 서비스 시간)
-        for (Process p : this.processes) {
-            Integer waitTime = scheduledResult.stream()
-                    .filter(a -> a.getProcess().equals(p)) // 이 프로세스의 스케줄링 결과만 가져와
-                    .mapToInt(a -> a.getEndAt() - a.getStartAt()) // 서비스 시간 계산 후
-                    .sum(); // 모두 더한 값을 반환
-
-            p.setWaitTime(p.getTurnAroundTime() - waitTime);
+            process.setWaitTime(scheduledData.getStartAt() - serviceTime);
         }
     }
 
