@@ -12,9 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * 선점 우선순위 알고리즘
- */
 @Builder
 @Getter
 @Setter
@@ -52,6 +49,9 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
             Integer startTime = currentTime;
             Integer endTime;
+
+            // 도착한 프로세스중
+            // 우선순위가 가장 높은 아이
 
             if (nextProcessArrivalTime > currentTime) {
                 Integer thisServiceTime = nextProcessArrivalTime - currentTime;

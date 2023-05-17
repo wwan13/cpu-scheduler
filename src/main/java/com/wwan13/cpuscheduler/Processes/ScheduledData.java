@@ -2,10 +2,6 @@ package com.wwan13.cpuscheduler.Processes;
 
 import lombok.*;
 
-/**
- * ScheduledData Class
- * 스케줄링 결과를 담은 데이터 클래스
- */
 @Builder
 @Getter
 @Setter

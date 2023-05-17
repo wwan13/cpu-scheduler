@@ -2,9 +2,6 @@ package com.wwan13.cpuscheduler.Processes;
 
 import lombok.*;
 
-/**
- * Process Class
- */
 @Builder
 @Getter
 @Setter

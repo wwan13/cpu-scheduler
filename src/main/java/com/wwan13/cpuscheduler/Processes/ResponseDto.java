@@ -4,10 +4,6 @@ import lombok.*;
 
 import java.util.List;
 
-/**
- * ResponseDto Class
- * 스케줄링 결과를 Client 로 보내기 위한 클래스
- */
 @Builder
 @Getter
 @Setter
