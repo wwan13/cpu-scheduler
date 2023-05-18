@@ -10,6 +10,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Builder
@@ -23,56 +24,59 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
     @Override
     public ResponseDto schedule() {
-        Integer currentTime = 0;                                        // 현재 시간을 저장하는 변수
-        List<ScheduledData> scheduledResult = new ArrayList<>();        // 스줄링 결과를 단계별로 저장할 리스트
 
-        // ready queue 초기값
+        Integer currentTime = 0;
+        List<ScheduledData> scheduledResult = new ArrayList<>();
+
         List<Process> readyQueue = this.getReadyQueue();
 
-        // 모든 프로세스가 스케줄링 완료될 때 까지 반복
         while(!readyQueue.isEmpty()) {
 
-            // 도착 시간으로 정렬 하였기 때문에, 가장 먼저 도착한 프로세스를 가져오고, 기존 리스트에서 삭제
-            Process currentProcess = readyQueue.remove(0);
-            Integer nextProcessArrivalTime;
+            Optional<Process> optionalProcess = this.getFirstPriorityProcessAlreadyArrive(readyQueue, currentTime);
+            Process process;
+            Integer nextProcessArriveTime = getNextProcessArriveTime(currentTime);
 
-            if (!readyQueue.isEmpty()) {
-                nextProcessArrivalTime = readyQueue.get(0).getArrivalTime();
+            if (optionalProcess == null) {
+                currentTime += 1;
+                continue;
             } else {
-                nextProcessArrivalTime = 0;
+                process = optionalProcess.get();
+                readyQueue.remove(process);
             }
 
-            // 프로세스의 도착시간이 지금 현재 시간보다 빠르다면 프로세스의 도착시간으로 현재 시간을 변경
-            if (currentProcess.getArrivalTime() > currentTime) {
-                currentTime = currentProcess.getArrivalTime();
+            if (process.getArrivalTime() > currentTime) {
+                currentTime += process.getArrivalTime();
             }
 
-            Integer startTime = currentTime;
-            Integer endTime;
+            ScheduledData scheduledData;
+            if (nextProcessArriveTime > currentTime && nextProcessArriveTime != 0xffff) {
 
-            // 도착한 프로세스중
-            // 우선순위가 가장 높은 아이
+                Integer thisServiceTime = nextProcessArriveTime - currentTime;
+                process.setServiceTime(process.getServiceTime() - thisServiceTime);
+                readyQueue.add(process);
 
-            if (nextProcessArrivalTime > currentTime) {
-                Integer thisServiceTime = nextProcessArrivalTime - currentTime;
-                currentProcess.setServiceTime(currentProcess.getServiceTime() - thisServiceTime);
-                readyQueue.add(currentProcess);
-                endTime = currentTime + thisServiceTime;
+                scheduledData = ScheduledData.builder()
+                        .process(process)
+                        .startAt(currentTime)
+                        .endAt(nextProcessArriveTime)
+                        .build();
+
                 currentTime += thisServiceTime;
+
             } else {
-                endTime = currentProcess.getServiceTime();
-                currentTime += currentProcess.getServiceTime();
+
+                scheduledData = ScheduledData.builder()
+                        .process(process)
+                        .startAt(currentTime)
+                        .endAt(currentTime + process.getServiceTime())
+                        .build();
+
+                currentTime += process.getServiceTime();
+
             }
 
-            // 어느 프로세스가 언제부터 언제까지 스케줄링 되었는지 계산 후 리스트에 넣음
-            ScheduledData scheduledData = ScheduledData.builder()
-                    .process(currentProcess)
-                    .startAt(startTime)
-                    .endAt(endTime)
-                    .build();
             scheduledResult.add(scheduledData);
 
-            currentTime += currentProcess.getServiceTime();
         }
 
         this.calculatePerProcesses(scheduledResult);
@@ -91,38 +95,32 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
     private List<Process> getReadyQueue() {
 
-        Process firstScheduledProcess = this.getFirstScheduledProcess();
-
-        List<Process> readyQueue = this.processes.stream()
-                .filter(a -> !a.equals(firstScheduledProcess))
-                .sorted(Comparator.comparing(Process::getPriority)
-                        .thenComparing(Process::getArrivalTime))
+        return this.processes.stream()
+                .sorted(Comparator.comparing(Process::getArrivalTime))
                 .collect(Collectors.toList());
 
-        readyQueue.add(0, firstScheduledProcess);
-
-        return readyQueue;
-
     }
 
-    /**
-     * 가장 먼저 스케줄링되는 프로세스를 반환하는 메서드
-     * 도착 시간이 가장 빠르고, 도착 시간이 같다면 우선순위가 더 높은 것을 반환
-     * @return Process
-     */
-    private Process getFirstScheduledProcess() {
+    private Integer getNextProcessArriveTime(Integer currentProcessArriveTime) {
         return this.processes.stream()
-                .sorted(Comparator.comparing(Process::getArrivalTime)
-                        .thenComparing(Process::getPriority))
+                .sorted(Comparator.comparing(Process::getArrivalTime))
+                .map(Process::getArrivalTime)
+                .filter(a -> a > currentProcessArriveTime)
                 .findFirst()
-                .orElseThrow(() -> new NullPointerException());
+                .orElse(0xffff);
     }
 
-    /**
-     * 프로세스별 대기시간, 반환시간, 응답시간을 계산하는 메서드
-     * @param scheduledResult
-     */
+    private Optional<Process> getFirstPriorityProcessAlreadyArrive(List<Process> readyQueue, Integer currentTime) {
+
+        return readyQueue.stream()
+                .filter(a -> a.getArrivalTime() <= currentTime)
+                .sorted(Comparator.comparing(Process::getPriority))
+                .findFirst();
+
+    }
+
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
+
         // 반환시간 계산
         for (ScheduledData scheduledData : scheduledResult) {
             Process process = scheduledData.getProcess();
@@ -136,9 +134,9 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
         // 대기시간 계산 (반환시간 - 전체 서비스 시간)
         for (Process p : this.processes) {
             Integer waitTime = scheduledResult.stream()
-                    .filter(a -> a.getProcess().equals(p)) // 이 프로세스의 스케줄링 결과만 가져와
-                    .mapToInt(a -> a.getEndAt() - a.getStartAt()) // 서비스 시간 계산 후
-                    .sum(); // 모두 더한 값을 반환
+                    .filter(a -> a.getProcess().equals(p))
+                    .mapToInt(a -> a.getEndAt() - a.getStartAt())
+                    .sum();
 
             p.setWaitTime(p.getTurnAroundTime() - waitTime);
         }
