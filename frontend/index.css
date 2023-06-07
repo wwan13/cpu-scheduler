@@ -6,6 +6,10 @@
     margin: 0px;
 }
 
+.scroll::-webkit-scrollbar {
+    display: none;
+  }
+
 .entire-wrap {
     width: 100%;
     height: 100vh;
@@ -69,7 +73,7 @@
 }
 
 .algorithm-name-wrap {
-    height: 140px;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -82,6 +86,14 @@
     color: #1c1b1a;
 }
 
+.display-none {
+    display: none;
+}
+
+.display {
+    display: block;
+}
+
 .main-form {
     width: 450px;
     height: 420px;
@@ -90,7 +102,7 @@
 .input-wrap {
     width: 450px;
     height: 280px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .input-each {
@@ -187,7 +199,7 @@
     font-weight: 500;
     color: #1c1b1a;
 
-    margin: 30px 5px 50px 5px;
+    margin: 40px 5px 50px 5px;
 
     transition: .2s;
 }
@@ -196,3 +208,57 @@
     color: #f5f5f5;
     background-color: #79Bac0;
 }
+
+.result-table-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.gant-chart-wrap {
+    width: 450px;
+    height: 60px;
+    margin-top: 50px;
+    background-color: #79Bac0;
+}
+
+.result-table-wrap {
+    width: 450px;
+    height: 280px;
+    margin-top: 30px;
+
+    justify-content: start;
+    align-items: center;
+    overflow-y: scroll;
+    /* background-color: #b8b9c1; */
+}
+
+table {
+    border-spacing: 0px;
+}
+
+td, th {
+    width: 75px;
+    text-align: center;
+}
+
+.result-table thead th {
+    background-color: #ecedf2;
+    height: 40px;
+    color: gray;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.result-table tbody td {
+    background-color: #f5f5f5;
+    height: 40px;
+    color: gray;
+    font-weight: 400;
+    font-size: 12px;
+    border-bottom: 1px solid #ecedef;
+}
+
+.mg-top-40 {
+    margin-top: 40px;
+}
+

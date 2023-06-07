@@ -15,7 +15,7 @@ function handleClick(event) {
     }
 
     if (target.classList[1] === "clicked") {
-        target.classList.remove("clicked");
+        // target.classList.remove("clicked");
     } else {
         for (var i = 0; i < btnList.length; i++) {
             btnList[i].classList.remove("clicked");
@@ -43,6 +43,9 @@ function handleClick(event) {
         var algorithmNameDom = document.getElementsByClassName("algorithm-name")[0]
         algorithmNameDom.innerHTML = algorithmName
         algorithmType = algorithmName
+
+        changeContents_resultToInput()
+
     }
 }
 
@@ -50,6 +53,10 @@ function addButtonHandleClick(event) {
     var proccesses = document.getElementsByClassName("proccesses")[0];
 
     var newElement = targetItem.cloneNode(true);
+    newElement.childNodes[1].value = "";
+    newElement.childNodes[3].value = "";
+    newElement.childNodes[5].value = "";
+    newElement.childNodes[7].value = "";
     proccesses.append(newElement);
 
     deleteBtns = document.getElementsByClassName("delete-button");
@@ -57,10 +64,28 @@ function addButtonHandleClick(event) {
     for (var i = 0; i < deleteBtns.length; i++) {
         deleteBtns[i].addEventListener("click", deleteButtonHandleClick);
     }
+
+    window.scrollTo(0,-1)
 }
 
 function deleteButtonHandleClick(event) {
     event.target.parentNode.remove();
+}
+
+function changeContents_resultToInput() {
+    var input_contents = document.getElementsByClassName("input-contents")[0];
+    var result_contents = document.getElementsByClassName("result-contents")[0];
+
+    input_contents.classList.remove("display-none");
+    result_contents.classList.add("display-none");
+}
+
+function changeContents_inputToResult() {
+    var input_contents = document.getElementsByClassName("input-contents")[0];
+    var result_contents = document.getElementsByClassName("result-contents")[0];
+
+    input_contents.classList.add("display-none");
+    result_contents.classList.remove("display-none");
 }
 
 function init() {
@@ -69,6 +94,10 @@ function init() {
     }
     addButton.addEventListener("click", addButtonHandleClick);
     deleteButton.addEventListener("click", deleteButtonHandleClick);
+
+    var toHomeButtton = document.getElementsByClassName("to-home")[0];
+    var submitButton = document.getElementsByClassName("submit-button")[0];
+    toHomeButtton.addEventListener("click", changeContents_resultToInput);
 }
 
 init();
