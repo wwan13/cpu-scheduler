@@ -141,32 +141,32 @@ const dummyData = {
         },
         {
             "process" : {
-                "PID" : "P0",
+                "PID" : "P1",
                 "WT" : 3,
                 "TT" : 7,
                 "RT" : 4
             },
-            "startAt" : 4,
+            "startAt" : 3,
             "endAt" : 7
         },
         {
             "process" : {
-                "PID" : "P0",
+                "PID" : "P2",
                 "WT" : 3,
                 "TT" : 7,
                 "RT" : 4
             },
-            "startAt" : 8,
+            "startAt" : 7,
             "endAt" : 10
         },
         {
             "process" : {
-                "PID" : "P0",
+                "PID" : "P3",
                 "WT" : 3,
                 "TT" : 7,
                 "RT" : 4
             },
-            "startAt" : 11,
+            "startAt" : 10,
             "endAt" : 16
         },
     ],
@@ -197,9 +197,44 @@ function setResultTable() {
         newNode.children[3].innerHTML = dummyData.processes[i].RT
         tableBody.append(newNode);
     }
-
-
 }
 
+function setGantChart() {
+    var gantChart = document.getElementsByClassName("gant-chart")[0];
+    var timeDisplay = document.getElementsByClassName("time-display")[0];
+    
+    schedulingDataLength = dummyData.scheduledDataList.length
+    entireServiceTime = dummyData.scheduledDataList[schedulingDataLength-1].endAt
+    blockCopy = gantChart.children[0].cloneNode(true)
+    timeBlockCopy = timeDisplay.children[0].cloneNode(true)
+
+    var emptyBlock = blockCopy.cloneNode(true)
+    emptyBlock.style.backgroundColor = "#f5f5f5"
+    emptyBlock.innerHTML = ""
+    emptyBlock.style.width = "10px"
+
+    gantChart.children[0].remove()
+    timeDisplay.children[0].remove()
+
+    for(var i=0; i<schedulingDataLength; i++) {
+        startTime = dummyData.scheduledDataList[i].startAt
+        endTime = dummyData.scheduledDataList[i].endAt
+        var serviceTime = endTime - startTime
+        var blockWidth = parseInt(((450 / entireServiceTime) * serviceTime)-2)
+
+        var newBlock = blockCopy.cloneNode(true)
+        newBlock.style.width = blockWidth.toString() + "px"
+        newBlock.innerHTML = dummyData.scheduledDataList[i].process.PID
+        gantChart.append(newBlock)
+
+        var newTimeBlock = timeBlockCopy.cloneNode(true)
+        newTimeBlock.style.width = blockWidth.toString() + "px"
+        newTimeBlock.children[0].innerHTML = startTime
+        newTimeBlock.children[1].innerHTML = endTime
+        timeDisplay.append(newTimeBlock)
+    }
+}
+
+setGantChart()
 setResultTable()
 init();

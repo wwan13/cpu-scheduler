@@ -218,7 +218,51 @@
     width: 450px;
     height: 60px;
     margin-top: 50px;
+    /* border: 1px solid #b8b9c1; */
+}
+
+.gant-chart {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.chart-bolck {
+    height: 40;
+    width: 68px;
+    margin: 0px 1px 0px 1px;
+    border-radius: 10px;
+    color: #f5f5f5;
+
     background-color: #79Bac0;
+    line-height: 40px;
+    text-align: center;
+}
+
+.time-display {
+    width: 100%;
+    height: 20px;
+    /* border: 1px solid #b8b9c1; */
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.time {
+    width: 82px;
+    height: 20px;
+    margin: 0px 1px 0px 1px;
+    display: flex;
+    justify-content: space-between;
+    /* border: 1px solid #b8b9c1; */
+}
+
+.time p {
+    margin: 2px;
+    font-size: 11px;
+    font-weight: 400;
+    color: #b8b9c1;
 }
 
 .result-table-wrap {
