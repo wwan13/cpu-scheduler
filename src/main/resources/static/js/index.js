@@ -203,7 +203,7 @@ function setResultTable() {
 function setGantChart() {
     var gantChart = document.getElementsByClassName("gant-chart")[0];
     var timeDisplay = document.getElementsByClassName("time-display")[0];
-    
+
     schedulingDataLength = dummyData.scheduledDataList.length
     entireServiceTime = dummyData.scheduledDataList[schedulingDataLength-1].endAt
     blockCopy = gantChart.children[0].cloneNode(true)
@@ -244,7 +244,7 @@ function submitButtonHandler() {
     // $.ajax({
     //     url : "",
     //     type : "POST",
-    //     // data : 
+    //     // data :
     // })
     // .done((result) => {
     //     console.log(result)
@@ -255,3 +255,4 @@ function submitButtonHandler() {
 setGantChart()
 setResultTable()
 init();
+console.log("asdasd")

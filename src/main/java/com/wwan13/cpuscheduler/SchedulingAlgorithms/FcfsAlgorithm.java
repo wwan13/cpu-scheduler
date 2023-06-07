@@ -49,7 +49,6 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
 
         ResponseDto responseDto = ResponseDto.builder()
                 .algorithmType("FCFS")
-                .processes(this.processes)
                 .scheduledDataList(scheduledResult)
                 .AWT(Awt.calculate(this.processes))
                 .ATT(Att.calculate(this.processes))

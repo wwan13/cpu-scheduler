@@ -1,11 +1,162 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" th:href="@{css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
     <meta charset="UTF-8">
     <title>CPU SCHEDULER</title>
 </head>
 <body>
-    <div class="test"></div>
+<div class="entire-wrap">
+    <div class="scheduling-input">
+        <div class="main-wrap">
+            <div class="algorithm-select">
+                <button class="algorithm-list clicked">FCFS</button>
+                <button class="algorithm-list">SJF</button>
+                <button class="algorithm-list"><div>PRIORITY</div><div>비선점</div></button>
+                <button class="algorithm-list"><div>PRIORITY</div><div>선점</div></button>
+                <button class="algorithm-list">RR</button>
+                <button class="algorithm-list">SRT</button>
+                <button class="algorithm-list">HRN</button>
+            </div>
+
+            <div class="main-contents">
+
+                <div class="input-contents display-none">
+                    <div class="algorithm-name-wrap">
+                        <p class="algorithm-name">First Come First
+                            Served</p>
+                        <!-- <p class="algorithm-name">Algorithm</p> -->
+                    </div>
+                    <div class="input-each">
+                        <p class="input-description">PID</p>
+                        <p class="input-description">Arrival Time</p>
+                        <p class="input-description">Service Time</p>
+                        <p class="input-description">Priority</p>
+                        <p class="input-description"></p>
+                    </div>
+                    <form id="main-form" class="main-form" action="">
+                        <div class="input-wrap scroll">
+                            <div class="proccesses">
+                                <div class="input-each">
+                                    <input type="text" name="pid"
+                                           class="input-box" value="P0">
+                                    <input type="number"
+                                           name="arrivalTime"
+                                           class="input-box" value=0>
+                                    <input type="number"
+                                           name="serviceTime"
+                                           class="input-box" value=7>
+                                    <input type="number" name="priority"
+                                           class="input-box" value=3>
+                                    <button type="button"
+                                            class="delete-button">-</button>
+                                </div>
+                                <div class="input-each">
+                                    <input type="text" name="pid"
+                                           class="input-box" value="P1">
+                                    <input type="number"
+                                           name="arrivalTime"
+                                           class="input-box" value=2>
+                                    <input type="number"
+                                           name="serviceTime"
+                                           class="input-box" value=4>
+                                    <input type="number" name="priority"
+                                           class="input-box" value=2>
+                                    <button type="button"
+                                            class="delete-button">-</button>
+                                </div>
+                                <div class="input-each">
+                                    <input type="text" name="pid"
+                                           class="input-box" value="P2">
+                                    <input type="number"
+                                           name="arrivalTime"
+                                           class="input-box" value=3>
+                                    <input type="number"
+                                           name="serviceTime"
+                                           class="input-box" value=1>
+                                    <input type="number" name="priority"
+                                           class="input-box" value=4>
+                                    <button type="button"
+                                            class="delete-button">-</button>
+                                </div>
+                                <div class="input-each">
+                                    <input type="text" name="pid"
+                                           class="input-box" value="P3">
+                                    <input type="number"
+                                           name="arrivalTime"
+                                           class="input-box" value=6>
+                                    <input type="number"
+                                           name="serviceTime"
+                                           class="input-box" value=3>
+                                    <input type="number" name="priority"
+                                           class="input-box" value=1>
+                                    <button type="button"
+                                            class="delete-button">-</button>
+                                </div>
+                            </div>
+                            <div class="time-slice-wrap">
+                                        <span class="input-description">Time
+                                            Slice</span>
+                                <input type="text" name="timeSlice"
+                                       class="time-slice" value="2">
+                            </div>
+                            <button type="button" class="add-button">+</button>
+                        </div>
+                        <button type="button" class="submit
+                                    submit-button">SCHEDULE</button>
+                    </form>
+                </div>
+
+                <div class="result-contents">
+                    <div class="gant-chart-wrap">
+                        <div class="gant-chart">
+                            <div class="chart-bolck">P0</div>
+                        </div>
+                        <div class="time-display">
+                            <div class="time">
+                                <p class="start-time">3</p>
+                                <p class="end-time">3</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-table-wrap scroll">
+                        <table class="result-table" align="center">
+                            <thead>
+                            <tr>
+                                <th>PID</th>
+                                <th>WT</th>
+                                <th>TT</th>
+                                <th>RT</th>
+                                <th>AWT</th>
+                                <th>ATT</th>
+                            </tr>
+                            </thead>
+                            <tbody class="table-body">
+                            <tr>
+                                <td>PID</td>
+                                <td>WT</td>
+                                <td>TT</td>
+                                <td>RT</td>
+                                <td rowspan="1">AWT</td>
+                                <td rowspan="1">ATT</td>
+                            </tr>
+                            <tr>
+                                <td>PID</td>
+                                <td>WT</td>
+                                <td>TT</td>
+                                <td>RT</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button class="to-home submit-button mg-top-40">home</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/index.js}"></script>
 </body>
 </html>

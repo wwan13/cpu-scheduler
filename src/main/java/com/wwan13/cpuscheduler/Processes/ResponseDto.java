@@ -21,6 +21,4 @@ public class ResponseDto {
 
     private Double ATT;                                 // 평균반환시간 : Average Turn Around Time
 
-    private Double ART;                                 // 평균응답시간 : Average Response Time
-
 }
