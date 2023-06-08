@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>CPU SCHEDULER</title>
 </head>
 <body>
@@ -23,8 +24,7 @@
 
                 <div class="input-contents display-none">
                     <div class="algorithm-name-wrap">
-                        <p class="algorithm-name">First Come First
-                            Served</p>
+                        <p class="algorithm-name">First Come First Served</p>
                         <!-- <p class="algorithm-name">Algorithm</p> -->
                     </div>
                     <div class="input-each">
@@ -107,7 +107,7 @@
                     </form>
                 </div>
 
-                <div class="result-contents">
+                <div class="result-contents" id="result-contents">
                     <div class="gant-chart-wrap">
                         <div class="gant-chart">
                             <div class="chart-bolck">P0</div>

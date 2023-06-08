@@ -238,19 +238,59 @@ function setGantChart() {
 
 function submitButtonHandler() {
 
-    var datas = $("#main-form").serialize();
-    console.log(datas)
+    var requestBody = {}
 
-    // $.ajax({
-    //     url : "",
-    //     type : "POST",
-    //     // data : 
-    // })
-    // .done((result) => {
-    //     console.log(result)
+    var datas = []
+    var pids = document.getElementsByName("pid");
+    var arrivalTimes = document.getElementsByName("arrivalTime");
+    var serviceTimes = document.getElementsByName("serviceTime");
+    var prioritys = document.getElementsByName("priority");
 
-    // })
+    for(var i = 0; i<pids.length; i++) {
+        var data = {}
+        data["PID"] = pids[i].value
+        data["arrivalTIme"] = arrivalTimes[i].value
+        data["serviceTIme"] = serviceTimes[i].value
+        data["priority"] = prioritys[i].value
+        datas.push(data)
+    }
+
+    requestBody["datas"] = datas
+    requestBody["timeSlice"] = document.getElementsByName("timeSlice")[0].value
+    console.log(requestBody)
+
+    var algorithm = document.getElementsByClassName("algorithm-name")[0].innerHTML;
+    if (algorithm === "First Come First Served") {
+        algorithmName = "FCFS"
+    } else if (algorithm === "Shortest Job First") {
+        algorithmName = "SJF"
+    } else if (algorithm === "Non-Preemptive Priority") {
+        algorithmName = "npPriority"
+    } else if (algorithm === "Preemptive Priority") {
+        algorithmName = "pPriority"
+    } else if (algorithm === "Round Robin") {
+        algorithmName = "RR"
+    } else if (algorithm === "Shortest Remaining Time") {
+        algorithmName = "SRT"
+    } else if (algorithm === "Highest Response ratio Next") {
+        algorithmName = "HRN"
+    }
+    console.log(algorithmName)
+
+    requestBody["algorithmType"] = algorithmName
+
+
 }
+//     $.ajax({
+//         url : "/schedule",
+//         type : "POST",
+//         contentsType : "application/json",
+//         data : requestBody,
+//         success : (result) => {
+//             console.log(result)
+//         }
+//     })
+// }
 
 setGantChart()
 setResultTable()
