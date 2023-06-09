@@ -10,6 +10,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Builder
@@ -31,11 +32,15 @@ public class HrnAlgorithm implements SchedulingAlgorithm {
 
         while(!readyQueue.isEmpty()) {
 
-            Process currentProcess = this.getHighestResponseRatioProcess(readyQueue, currentTime);
-            readyQueue.remove(currentProcess);
+            Optional<Process> optionalCurrentProcess = this.getHighestResponseRatioProcess(readyQueue, currentTime);
+            Process currentProcess;
 
-            if (currentProcess.getArrivalTime() > currentTime) {
-                currentTime = currentProcess.getArrivalTime();
+            if (optionalCurrentProcess.isEmpty()) {
+                currentTime += 1;
+                continue;
+            } else  {
+                currentProcess = optionalCurrentProcess.get();
+                readyQueue.remove(currentProcess);
             }
 
             ScheduledData scheduledData = ScheduledData.builder()
@@ -67,15 +72,13 @@ public class HrnAlgorithm implements SchedulingAlgorithm {
                 .collect(Collectors.toList());
     }
 
-    private Process getHighestResponseRatioProcess(List<Process> readyQueue, Integer currentTime) {
+    private Optional<Process> getHighestResponseRatioProcess(List<Process> readyQueue, Integer currentTime) {
         return readyQueue.stream()
-                .filter((p) -> currentTime > p.getArrivalTime())
-                .sorted(Comparator.comparing((p) -> {
+                .filter((p) -> currentTime >= p.getArrivalTime())
+                .max(Comparator.comparing((p) -> {
                     Integer waitTime = currentTime - p.getArrivalTime();
                     return (waitTime + p.getServiceTime()) / p.getServiceTime();
-                }))
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException());
+                }));
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
@@ -83,6 +86,7 @@ public class HrnAlgorithm implements SchedulingAlgorithm {
             Process process = scheduledData.getProcess();
             process.setWaitTime(scheduledData.getStartAt() - process.getArrivalTime());
             process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
+            process.setResponseTime((scheduledData.getStartAt() + 1) - process.getArrivalTime());
         }
     }
 

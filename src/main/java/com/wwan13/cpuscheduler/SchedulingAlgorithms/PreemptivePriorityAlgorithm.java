@@ -36,16 +36,12 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
             Process process;
             Integer nextProcessArriveTime = getNextProcessArriveTime(currentTime);
 
-            if (optionalProcess == null) {
+            if (optionalProcess.isEmpty()) {
                 currentTime += 1;
                 continue;
             } else {
                 process = optionalProcess.get();
                 readyQueue.remove(process);
-            }
-
-            if (process.getArrivalTime() > currentTime) {
-                currentTime += process.getArrivalTime();
             }
 
             ScheduledData scheduledData;
@@ -114,8 +110,7 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
         return readyQueue.stream()
                 .filter(a -> a.getArrivalTime() <= currentTime)
-                .sorted(Comparator.comparing(Process::getPriority))
-                .findFirst();
+                .min(Comparator.comparing(Process::getPriority));
 
     }
 

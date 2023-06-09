@@ -79,9 +79,8 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
     private Process getFirstScheduledProcess() {
         return this.processes.stream()
-                .sorted(Comparator.comparing(Process::getArrivalTime)
+                .min(Comparator.comparing(Process::getArrivalTime)
                         .thenComparing(Process::getPriority))
-                .findFirst()
                 .orElseThrow(() -> new NullPointerException());
     }
 
@@ -90,6 +89,7 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
             Process process = scheduledData.getProcess();
             process.setWaitTime(scheduledData.getStartAt() - process.getArrivalTime());
             process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
+            process.setResponseTime((scheduledData.getStartAt() + 1) - process.getArrivalTime());
         }
     }
 }

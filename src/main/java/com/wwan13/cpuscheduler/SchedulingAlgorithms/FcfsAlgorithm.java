@@ -69,6 +69,7 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
             Process process = scheduledData.getProcess();
             process.setWaitTime(scheduledData.getStartAt() - process.getArrivalTime());
             process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
+            process.setResponseTime((scheduledData.getStartAt() + 1) - process.getArrivalTime());
         }
     }
 }
