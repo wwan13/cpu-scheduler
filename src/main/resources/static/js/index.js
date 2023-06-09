@@ -222,12 +222,28 @@ function setGantChart(data) {
     gantChart.replaceChildren()
     timeDisplay.replaceChildren()
 
-    var emptyBlock = blockCopy.cloneNode(true)
-    emptyBlock.style.backgroundColor = "#f5f5f5"
-    emptyBlock.innerHTML = ""
-    emptyBlock.style.width = "10px"
+    var lastProcessEndAt = 0
 
     for(var i=0; i<schedulingDataLength; i++) {
+        if(parseInt(dummyData.scheduledDataList[0].startAt) > parseInt(lastProcessEndAt)) {
+            var startAt = dummyData.scheduledDataList[0].startAt
+            var emptyBlock = blockCopy.cloneNode(true)
+            var blockWidth = parseInt(((450 / entireServiceTime) * startAt)-2)
+
+            emptyBlock.style.backgroundColor = "#f5f5f5"
+            emptyBlock.innerHTML = ""
+            emptyBlock.style.width = blockWidth.toString() + "px"
+            emptyBlock.style.border = "1px gray dotted"
+            gantChart.append(emptyBlock)
+            console.log(emptyBlock.style)
+
+            var newTimeBlock = timeBlockCopy.cloneNode(true)
+            newTimeBlock.children[0].innerHTML = ""
+            newTimeBlock.children[1].innerHTML = ""
+            newTimeBlock.style.width = blockWidth.toString() + "px"
+            timeDisplay.append(newTimeBlock)
+        }
+
         startTime = dummyData.scheduledDataList[i].startAt
         endTime = dummyData.scheduledDataList[i].endAt
         var serviceTime = endTime - startTime
@@ -243,6 +259,8 @@ function setGantChart(data) {
         newTimeBlock.children[0].innerHTML = startTime
         newTimeBlock.children[1].innerHTML = endTime
         timeDisplay.append(newTimeBlock)
+
+        lastProcessEndAt = endTime
     }
 }
 
