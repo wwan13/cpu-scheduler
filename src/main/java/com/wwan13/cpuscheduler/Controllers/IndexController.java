@@ -41,12 +41,6 @@ public class IndexController {
         int loopValue = (data.size() - 2) / 4;
         List<Process> result = new ArrayList<>();
 
-        System.out.println(data);
-        System.out.println(data.get("datas[1][PID]"));
-        System.out.println(data.get("datas[1][arrivalTime]"));
-        System.out.println(data.get("datas[1][serviceTime]"));
-        System.out.println(data.get("datas[1][priority]"));
-
         for(int i=0; i < loopValue; i++) {
             String hashMapKey = "datas[" + Integer.toString(i) + "]";
             Process newProcess = Process.builder()

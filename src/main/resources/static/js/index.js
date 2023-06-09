@@ -183,7 +183,6 @@ function setResultTable(data) {
 
     var data = data.response
 
-    console.log(tableBody.children)
     tableBody.replaceChildren()
 
     newFistChild = firstChild.cloneNode(true)
@@ -235,7 +234,6 @@ function setGantChart(data) {
             emptyBlock.style.width = blockWidth.toString() + "px"
             emptyBlock.style.border = "1px gray dotted"
             gantChart.append(emptyBlock)
-            console.log(emptyBlock.style)
 
             var newTimeBlock = timeBlockCopy.cloneNode(true)
             newTimeBlock.children[0].innerHTML = ""
@@ -302,7 +300,6 @@ function submitButtonHandler() {
         } else if (algorithm === "Highest Response ratio Next") {
             algorithmName = "HRN"
         }
-        console.log(algorithmName)
 
         requestBody["algorithmType"] = algorithmName
 
@@ -312,7 +309,6 @@ function submitButtonHandler() {
         contentsType : "application/json",
         data : requestBody,
         success : (result) => {
-            console.log(result)
             changeContents_inputToResult()
             setResultTable(result)
             setGantChart(result)
