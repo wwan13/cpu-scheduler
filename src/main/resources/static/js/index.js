@@ -101,121 +101,131 @@ function init() {
     submitButton.addEventListener("click", submitButtonHandler);
 }
 
-const dummyData = {
-    "algorithmType" : "FCFS",
-    "processes" : [
-        {
-            "PID" : "P0",
-            "WT" : 3,
-            "TT" : 7,
-            "RT" : 4
-        },
-        {
-            "PID" : "P1",
-            "WT" : 3,
-            "TT" : 7,
-            "RT" : 4
-        },
-        {
-            "PID" : "P2",
-            "WT" : 3,
-            "TT" : 7,
-            "RT" : 4
-        },
-        {
-            "PID" : "P3",
-            "WT" : 3,
-            "TT" : 7,
-            "RT" : 4
-        },
-    ],
-    "scheduledDataList" : [
-        {
-            "process" : {
-                "PID" : "P0",
-                "WT" : 3,
-                "TT" : 7,
-                "RT" : 4
-            },
-                "startAt" : 0,
-                "endAt" : 3
-        },
-        {
-            "process" : {
-                "PID" : "P1",
-                "WT" : 3,
-                "TT" : 7,
-                "RT" : 4
-            },
-            "startAt" : 3,
-            "endAt" : 7
-        },
-        {
-            "process" : {
-                "PID" : "P2",
-                "WT" : 3,
-                "TT" : 7,
-                "RT" : 4
-            },
-            "startAt" : 7,
-            "endAt" : 10
-        },
-        {
-            "process" : {
-                "PID" : "P3",
-                "WT" : 3,
-                "TT" : 7,
-                "RT" : 4
-            },
-            "startAt" : 10,
-            "endAt" : 16
-        },
-    ],
-    "AWT" : "3",
-    "ATT" : "5"
-}
+//const dummyData = {
+//    "algorithmType" : "FCFS",
+//    "processes" : [
+//        {
+//            "PID" : "P0",
+//            "WT" : 3,
+//            "TT" : 7,
+//            "RT" : 4
+//        },
+//        {
+//            "PID" : "P1",
+//            "WT" : 3,
+//            "TT" : 7,
+//            "RT" : 4
+//        },
+//        {
+//            "PID" : "P2",
+//            "WT" : 3,
+//            "TT" : 7,
+//            "RT" : 4
+//        },
+//        {
+//            "PID" : "P3",
+//            "WT" : 3,
+//            "TT" : 7,
+//            "RT" : 4
+//        },
+//    ],
+//    "scheduledDataList" : [
+//        {
+//            "process" : {
+//                "PID" : "P0",
+//                "WT" : 3,
+//                "TT" : 7,
+//                "RT" : 4
+//            },
+//                "startAt" : 0,
+//                "endAt" : 3
+//        },
+//        {
+//            "process" : {
+//                "PID" : "P1",
+//                "WT" : 3,
+//                "TT" : 7,
+//                "RT" : 4
+//            },
+//            "startAt" : 3,
+//            "endAt" : 7
+//        },
+//        {
+//            "process" : {
+//                "PID" : "P2",
+//                "WT" : 3,
+//                "TT" : 7,
+//                "RT" : 4
+//            },
+//            "startAt" : 7,
+//            "endAt" : 10
+//        },
+//        {
+//            "process" : {
+//                "PID" : "P3",
+//                "WT" : 3,
+//                "TT" : 7,
+//                "RT" : 4
+//            },
+//            "startAt" : 10,
+//            "endAt" : 16
+//        },
+//    ],
+//    "AWT" : "3",
+//    "ATT" : "5"
+//}
 
-function setResultTable() {
-    var tableBody = document.getElementsByClassName("table-body")[0];
-    var firstChild = tableBody.children[0]
-    var elseChild = tableBody.children[1].cloneNode(true)
+const tableBody = document.getElementsByClassName("table-body")[0];
+const firstChild = tableBody.children[0].cloneNode(true)
+const elseChild = tableBody.children[1].cloneNode(true)
 
-    firstChild.children[0].innerHTML = dummyData.processes[0].PID
-    firstChild.children[1].innerHTML = dummyData.processes[0].WT
-    firstChild.children[2].innerHTML = dummyData.processes[0].TT
-    firstChild.children[3].innerHTML = dummyData.processes[0].RT
-    firstChild.children[4].rowSpan = dummyData.processes.length
-    firstChild.children[5].rowSpan = dummyData.processes.length
-    firstChild.children[4].innerHTML = dummyData.AWT
-    firstChild.children[5].innerHTML = dummyData.ATT
-    tableBody.children[1].remove()
+function setResultTable(data) {
 
-    for (var i=1; i<dummyData.processes.length; i++) {
+    var data = data.response
+
+    console.log(tableBody.children)
+    tableBody.replaceChildren()
+
+    newFistChild = firstChild.cloneNode(true)
+    newFistChild.children[0].innerHTML = data.processes[0].processId
+    newFistChild.children[1].innerHTML = data.processes[0].waitTime
+    newFistChild.children[2].innerHTML = data.processes[0].turnAroundTime
+    newFistChild.children[3].innerHTML = data.processes[0].responseTime
+    newFistChild.children[4].rowSpan = data.processes.length
+    newFistChild.children[5].rowSpan = data.processes.length
+    newFistChild.children[4].innerHTML = data.awt.toFixed(2);
+    newFistChild.children[5].innerHTML = data.att.toFixed(2);
+
+    tableBody.append(newFistChild)
+    for (var i=1; i<data.processes.length; i++) {
         var newNode = elseChild.cloneNode(true);
-        newNode.children[0].innerHTML = dummyData.processes[i].PID
-        newNode.children[1].innerHTML = dummyData.processes[i].WT
-        newNode.children[2].innerHTML = dummyData.processes[i].TT
-        newNode.children[3].innerHTML = dummyData.processes[i].RT
+        newNode.children[0].innerHTML = data.processes[i].processId
+        newNode.children[1].innerHTML = data.processes[i].waitTime
+        newNode.children[2].innerHTML = data.processes[i].turnAroundTime
+        newNode.children[3].innerHTML = data.processes[i].responseTime
         tableBody.append(newNode);
     }
 }
 
-function setGantChart() {
-    var gantChart = document.getElementsByClassName("gant-chart")[0];
-    var timeDisplay = document.getElementsByClassName("time-display")[0];
+const gantChart = document.getElementsByClassName("gant-chart")[0];
+const timeDisplay = document.getElementsByClassName("time-display")[0];
+const blockCopy = gantChart.children[0].cloneNode(true)
+const timeBlockCopy = timeDisplay.children[0].cloneNode(true)
+
+function setGantChart(data) {
+
+    var dummyData = data.response
 
     schedulingDataLength = dummyData.scheduledDataList.length
     entireServiceTime = dummyData.scheduledDataList[schedulingDataLength-1].endAt
-    blockCopy = gantChart.children[0].cloneNode(true)
-    timeBlockCopy = timeDisplay.children[0].cloneNode(true)
+
+    gantChart.replaceChildren()
+    timeDisplay.replaceChildren()
 
     var emptyBlock = blockCopy.cloneNode(true)
     emptyBlock.style.backgroundColor = "#f5f5f5"
     emptyBlock.innerHTML = ""
     emptyBlock.style.width = "10px"
-
-    gantChart.children[0].remove()
-    timeDisplay.children[0].remove()
 
     for(var i=0; i<schedulingDataLength; i++) {
         startTime = dummyData.scheduledDataList[i].startAt
@@ -225,7 +235,7 @@ function setGantChart() {
 
         var newBlock = blockCopy.cloneNode(true)
         newBlock.style.width = blockWidth.toString() + "px"
-        newBlock.innerHTML = dummyData.scheduledDataList[i].process.PID
+        newBlock.innerHTML = dummyData.scheduledDataList[i].process.processId
         gantChart.append(newBlock)
 
         var newTimeBlock = timeBlockCopy.cloneNode(true)
@@ -249,8 +259,8 @@ function submitButtonHandler() {
     for(var i = 0; i<pids.length; i++) {
         var data = {}
         data["PID"] = pids[i].value
-        data["arrivalTIme"] = arrivalTimes[i].value
-        data["serviceTIme"] = serviceTimes[i].value
+        data["arrivalTime"] = arrivalTimes[i].value
+        data["serviceTime"] = serviceTimes[i].value
         data["priority"] = prioritys[i].value
         datas.push(data)
     }
@@ -285,10 +295,11 @@ function submitButtonHandler() {
         data : requestBody,
         success : (result) => {
             console.log(result)
+            changeContents_inputToResult()
+            setResultTable(result)
+            setGantChart(result)
         }
     })
 }
 
-setGantChart()
-setResultTable()
 init();

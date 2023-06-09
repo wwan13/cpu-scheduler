@@ -249,14 +249,14 @@ function submitButtonHandler() {
     for(var i = 0; i<pids.length; i++) {
         var data = {}
         data["PID"] = pids[i].value
-        data["arrivalTIme"] = arrivalTimes[i].value
-        data["serviceTIme"] = serviceTimes[i].value
+        data["arrivalTime"] = arrivalTimes[i].value
+        data["serviceTime"] = serviceTimes[i].value
         data["priority"] = prioritys[i].value
         datas.push(data)
     }
 
     requestBody["datas"] = datas
-    requestBody["timeSlice"] = document.getElementsByName("timeSlice")[0].value
+    requestBody[""] = document.getElementsByName("timeSlice")[0].value
     console.log(requestBody)
 
     var algorithm = document.getElementsByClassName("algorithm-name")[0].innerHTML;
