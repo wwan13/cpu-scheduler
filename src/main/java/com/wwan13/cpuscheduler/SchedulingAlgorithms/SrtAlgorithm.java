@@ -94,12 +94,24 @@ public class SrtAlgorithm implements SchedulingAlgorithm{
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
+        // 반환시간 대기시간 계산
         for (ScheduledData scheduledData : scheduledResult) {
             Process process = scheduledData.getProcess();
-            Integer serviceTime = scheduledData.getEndAt() - scheduledData.getStartAt();
-
             process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
-            process.setWaitTime(scheduledData.getStartAt() - serviceTime);
+
+            if (process.getResponseTime() == null) {
+                process.setResponseTime((scheduledData.getStartAt() + 1) - process.getArrivalTime());
+            }
+        }
+
+        // 대기시간 계산 (반환시간 - 전체 서비스 시간)
+        for (Process p : this.processes) {
+            Integer waitTime = scheduledResult.stream()
+                    .filter(a -> a.getProcess().equals(p)) // 이 프로세스의 스케줄링 결과만 가져와
+                    .mapToInt(a -> a.getEndAt() - a.getStartAt()) // 서비스 시간 계산 후
+                    .sum(); // 모두 더한 값을 반환
+
+            p.setWaitTime(p.getTurnAroundTime() - waitTime);
         }
     }
 

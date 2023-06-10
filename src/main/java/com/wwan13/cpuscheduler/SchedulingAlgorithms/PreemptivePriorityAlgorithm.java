@@ -118,10 +118,14 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
 
-        // 반환시간 계산
+        // 반환시간, 대기시간 계산
         for (ScheduledData scheduledData : scheduledResult) {
             Process process = scheduledData.getProcess();
             process.setTurnAroundTime(scheduledData.getEndAt() - process.getArrivalTime());
+
+            if (process.getResponseTime() == null) {
+                process.setResponseTime((scheduledData.getStartAt() + 1) - process.getArrivalTime());
+            }
         }
 
         // 대기시간 계산 (반환시간 - 전체 서비스 시간)
