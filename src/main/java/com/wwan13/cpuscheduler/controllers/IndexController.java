@@ -1,11 +1,10 @@
-package com.wwan13.cpuscheduler.Controllers;
+package com.wwan13.cpuscheduler.controllers;
 
-import com.wwan13.cpuscheduler.Processes.ResponseDto;
-import com.wwan13.cpuscheduler.SchedulingAlgorithms.*;
+import com.wwan13.cpuscheduler.processes.ResponseDto;
+import com.wwan13.cpuscheduler.schedulingalgorithms.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.wwan13.cpuscheduler.Processes.Process;
+import com.wwan13.cpuscheduler.processes.Process;
 
 import java.util.ArrayList;
 import java.util.HashMap;

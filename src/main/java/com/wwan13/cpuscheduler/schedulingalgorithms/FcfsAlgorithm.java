@@ -1,16 +1,13 @@
-package com.wwan13.cpuscheduler.SchedulingAlgorithms;
+package com.wwan13.cpuscheduler.schedulingalgorithms;
 
-import com.wwan13.cpuscheduler.Commons.Att;
-import com.wwan13.cpuscheduler.Commons.Awt;
-import com.wwan13.cpuscheduler.Processes.Process;
-import com.wwan13.cpuscheduler.Processes.ResponseDto;
-import com.wwan13.cpuscheduler.Processes.ScheduledData;
+import com.wwan13.cpuscheduler.commons.Att;
+import com.wwan13.cpuscheduler.commons.Awt;
+import com.wwan13.cpuscheduler.processes.Process;
+import com.wwan13.cpuscheduler.processes.ResponseDto;
+import com.wwan13.cpuscheduler.processes.ScheduledData;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Builder
@@ -18,7 +15,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
+public class FcfsAlgorithm implements SchedulingAlgorithm{
 
     private List<Process> processes;
 
@@ -30,9 +27,9 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
         List<Process> readyQueue = this.getReadyQueue();
 
-        while (!readyQueue.isEmpty()) {
+        while(!readyQueue.isEmpty()) {
 
-            Optional<Process> optionalCurrentProcess = this.getFirstPriorityProcess(readyQueue, currentTime);
+            Optional<Process> optionalCurrentProcess = this.getArrivedProcess(readyQueue, currentTime);
 
             if (optionalCurrentProcess.isEmpty()) {
                 currentTime += 1;
@@ -42,6 +39,7 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
             Process currentProcess = optionalCurrentProcess.get();
             readyQueue.remove(currentProcess);
 
+
             ScheduledData scheduledData = ScheduledData.builder()
                     .process(currentProcess)
                     .startAt(currentTime)
@@ -50,13 +48,12 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
             scheduledResult.add(scheduledData);
 
             currentTime += currentProcess.getServiceTime();
-
         }
 
         this.calculatePerProcesses(scheduledResult);
 
         ResponseDto responseDto = ResponseDto.builder()
-                .algorithmType("NonPreemptivePriority")
+                .algorithmType("FCFS")
                 .processes(this.processes)
                 .scheduledDataList(scheduledResult)
                 .AWT(Awt.calculate(this.processes))
@@ -68,14 +65,14 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
     private List<Process> getReadyQueue() {
         return this.processes.stream()
-                .sorted(Comparator.comparing(Process::getArrivalTime))
-                .collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Process::getArrivalTime))
+                    .collect(Collectors.toList());
     }
 
-    private Optional<Process> getFirstPriorityProcess(List<Process> readyQueue, Integer currentTime) {
-        return readyQueue.stream()
-                .filter((p) -> currentTime >= p.getArrivalTime())
-                .min(Comparator.comparing(Process::getPriority));
+    private Optional<Process> getArrivedProcess(List<Process> processes, Integer currentTIme) {
+        return processes.stream()
+                .filter((p) -> currentTIme >= p.getArrivalTime())
+                .findFirst();
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {

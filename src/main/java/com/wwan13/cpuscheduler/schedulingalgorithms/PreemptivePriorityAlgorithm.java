@@ -1,10 +1,10 @@
-package com.wwan13.cpuscheduler.SchedulingAlgorithms;
+package com.wwan13.cpuscheduler.schedulingalgorithms;
 
-import com.wwan13.cpuscheduler.Commons.Att;
-import com.wwan13.cpuscheduler.Commons.Awt;
-import com.wwan13.cpuscheduler.Processes.Process;
-import com.wwan13.cpuscheduler.Processes.ResponseDto;
-import com.wwan13.cpuscheduler.Processes.ScheduledData;
+import com.wwan13.cpuscheduler.commons.Att;
+import com.wwan13.cpuscheduler.commons.Awt;
+import com.wwan13.cpuscheduler.processes.Process;
+import com.wwan13.cpuscheduler.processes.ResponseDto;
+import com.wwan13.cpuscheduler.processes.ScheduledData;
 import lombok.*;
 
 import java.util.ArrayList;

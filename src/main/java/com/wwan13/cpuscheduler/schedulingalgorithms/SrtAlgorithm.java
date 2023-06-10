@@ -1,10 +1,10 @@
-package com.wwan13.cpuscheduler.SchedulingAlgorithms;
+package com.wwan13.cpuscheduler.schedulingalgorithms;
 
-import com.wwan13.cpuscheduler.Commons.Att;
-import com.wwan13.cpuscheduler.Commons.Awt;
-import com.wwan13.cpuscheduler.Processes.Process;
-import com.wwan13.cpuscheduler.Processes.ResponseDto;
-import com.wwan13.cpuscheduler.Processes.ScheduledData;
+import com.wwan13.cpuscheduler.commons.Att;
+import com.wwan13.cpuscheduler.commons.Awt;
+import com.wwan13.cpuscheduler.processes.Process;
+import com.wwan13.cpuscheduler.processes.ResponseDto;
+import com.wwan13.cpuscheduler.processes.ScheduledData;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RrAlgorithm implements SchedulingAlgorithm{
+public class SrtAlgorithm implements SchedulingAlgorithm{
 
     private List<Process> processes;
     private Integer timeSlice;
@@ -33,15 +33,18 @@ public class RrAlgorithm implements SchedulingAlgorithm{
 
         while(!readyQueue.isEmpty()) {
 
-            Optional<Process> optionalCurrentProcess = this.getArrivedProcess(readyQueue, currentTime);
-
+            Optional<Process> optionalCurrentProcess = this.getShortestRemainingProcess(readyQueue, currentTime);
+            Process currentProcess;
             if(optionalCurrentProcess.isEmpty()) {
                 currentTime += 1;
                 continue;
             }
-
-            Process currentProcess = optionalCurrentProcess.get();
+            currentProcess = optionalCurrentProcess.get();
             readyQueue.remove(currentProcess);
+
+            if (currentProcess.getArrivalTime() > currentTime) {
+                currentTime = currentProcess.getArrivalTime();
+            }
 
             Integer startTime = currentTime;
             Integer endTime;
@@ -67,7 +70,7 @@ public class RrAlgorithm implements SchedulingAlgorithm{
         this.calculatePerProcesses(scheduledResult);
 
         ResponseDto responseDto = ResponseDto.builder()
-                .algorithmType("RR")
+                .algorithmType("SRT")
                 .processes(this.processes)
                 .scheduledDataList(scheduledResult)
                 .AWT(Awt.calculate(this.processes))
@@ -75,6 +78,7 @@ public class RrAlgorithm implements SchedulingAlgorithm{
                 .build();
 
         return responseDto;
+
     }
 
     private List<Process> getReadyQueue() {
@@ -83,10 +87,10 @@ public class RrAlgorithm implements SchedulingAlgorithm{
                 .collect(Collectors.toList());
     }
 
-    private Optional<Process> getArrivedProcess(List<Process> readyQueue, Integer currentTime) {
+    private Optional<Process> getShortestRemainingProcess(List<Process> readyQueue, Integer currentTime) {
         return readyQueue.stream()
                 .filter((p) -> currentTime >= p.getArrivalTime())
-                .findFirst();
+                .min(Comparator.comparing(Process::getServiceTime));
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {

@@ -1,13 +1,16 @@
-package com.wwan13.cpuscheduler.SchedulingAlgorithms;
+package com.wwan13.cpuscheduler.schedulingalgorithms;
 
-import com.wwan13.cpuscheduler.Commons.Att;
-import com.wwan13.cpuscheduler.Commons.Awt;
-import com.wwan13.cpuscheduler.Processes.Process;
-import com.wwan13.cpuscheduler.Processes.ResponseDto;
-import com.wwan13.cpuscheduler.Processes.ScheduledData;
+import com.wwan13.cpuscheduler.commons.Att;
+import com.wwan13.cpuscheduler.commons.Awt;
+import com.wwan13.cpuscheduler.processes.Process;
+import com.wwan13.cpuscheduler.processes.ResponseDto;
+import com.wwan13.cpuscheduler.processes.ScheduledData;
 import lombok.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Builder
@@ -15,7 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FcfsAlgorithm implements SchedulingAlgorithm{
+public class SjfAlgorithm implements SchedulingAlgorithm{
 
     private List<Process> processes;
 
@@ -29,7 +32,7 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
 
         while(!readyQueue.isEmpty()) {
 
-            Optional<Process> optionalCurrentProcess = this.getArrivedProcess(readyQueue, currentTime);
+            Optional<Process> optionalCurrentProcess = this.getShortestJobProcess(readyQueue, currentTime);
 
             if (optionalCurrentProcess.isEmpty()) {
                 currentTime += 1;
@@ -39,7 +42,6 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
             Process currentProcess = optionalCurrentProcess.get();
             readyQueue.remove(currentProcess);
 
-
             ScheduledData scheduledData = ScheduledData.builder()
                     .process(currentProcess)
                     .startAt(currentTime)
@@ -48,12 +50,14 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
             scheduledResult.add(scheduledData);
 
             currentTime += currentProcess.getServiceTime();
+
         }
 
         this.calculatePerProcesses(scheduledResult);
 
+        // 결과 반환을 위한 DTO
         ResponseDto responseDto = ResponseDto.builder()
-                .algorithmType("FCFS")
+                .algorithmType("SJF")
                 .processes(this.processes)
                 .scheduledDataList(scheduledResult)
                 .AWT(Awt.calculate(this.processes))
@@ -61,18 +65,19 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
                 .build();
 
         return responseDto;
+
     }
 
     private List<Process> getReadyQueue() {
         return this.processes.stream()
-                    .sorted(Comparator.comparing(Process::getArrivalTime))
-                    .collect(Collectors.toList());
+                .sorted(Comparator.comparing(Process::getArrivalTime))
+                .collect(Collectors.toList());
     }
 
-    private Optional<Process> getArrivedProcess(List<Process> processes, Integer currentTIme) {
-        return processes.stream()
-                .filter((p) -> currentTIme >= p.getArrivalTime())
-                .findFirst();
+    private Optional<Process> getShortestJobProcess(List<Process> readyQueue, Integer currentTime) {
+        return readyQueue.stream()
+                .filter((p) -> currentTime >= p.getArrivalTime())
+                .min(Comparator.comparing(Process::getServiceTime));
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {

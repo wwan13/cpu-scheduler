@@ -1,6 +1,6 @@
-package com.wwan13.cpuscheduler.SchedulingAlgorithms;
+package com.wwan13.cpuscheduler.schedulingalgorithms;
 
-import com.wwan13.cpuscheduler.Processes.Process;
+import com.wwan13.cpuscheduler.processes.Process;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;

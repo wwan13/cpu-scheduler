@@ -1,10 +1,10 @@
-package com.wwan13.cpuscheduler.SchedulingAlgorithms;
+package com.wwan13.cpuscheduler.schedulingalgorithms;
 
-import com.wwan13.cpuscheduler.Commons.Att;
-import com.wwan13.cpuscheduler.Commons.Awt;
-import com.wwan13.cpuscheduler.Processes.Process;
-import com.wwan13.cpuscheduler.Processes.ResponseDto;
-import com.wwan13.cpuscheduler.Processes.ScheduledData;
+import com.wwan13.cpuscheduler.commons.Att;
+import com.wwan13.cpuscheduler.commons.Awt;
+import com.wwan13.cpuscheduler.processes.Process;
+import com.wwan13.cpuscheduler.processes.ResponseDto;
+import com.wwan13.cpuscheduler.processes.ScheduledData;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -12,14 +12,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class SjfAlgorithm implements SchedulingAlgorithm{
+@NoArgsConstructor
+public class HrnAlgorithm implements SchedulingAlgorithm {
 
     private List<Process> processes;
 
@@ -33,14 +32,14 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
 
         while(!readyQueue.isEmpty()) {
 
-            Optional<Process> optionalCurrentProcess = this.getShortestJobProcess(readyQueue, currentTime);
+            Optional<Process> optionalCurrentProcess = this.getHighestResponseRatioProcess(readyQueue, currentTime);
 
             if (optionalCurrentProcess.isEmpty()) {
                 currentTime += 1;
                 continue;
             }
 
-            Process currentProcess = optionalCurrentProcess.get();
+            Process currentProcess = currentProcess = optionalCurrentProcess.get();
             readyQueue.remove(currentProcess);
 
             ScheduledData scheduledData = ScheduledData.builder()
@@ -51,14 +50,12 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
             scheduledResult.add(scheduledData);
 
             currentTime += currentProcess.getServiceTime();
-
         }
 
         this.calculatePerProcesses(scheduledResult);
 
-        // 결과 반환을 위한 DTO
         ResponseDto responseDto = ResponseDto.builder()
-                .algorithmType("SJF")
+                .algorithmType("HRN")
                 .processes(this.processes)
                 .scheduledDataList(scheduledResult)
                 .AWT(Awt.calculate(this.processes))
@@ -66,7 +63,6 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
                 .build();
 
         return responseDto;
-
     }
 
     private List<Process> getReadyQueue() {
@@ -75,10 +71,13 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
                 .collect(Collectors.toList());
     }
 
-    private Optional<Process> getShortestJobProcess(List<Process> readyQueue, Integer currentTime) {
+    private Optional<Process> getHighestResponseRatioProcess(List<Process> readyQueue, Integer currentTime) {
         return readyQueue.stream()
                 .filter((p) -> currentTime >= p.getArrivalTime())
-                .min(Comparator.comparing(Process::getServiceTime));
+                .max(Comparator.comparing((p) -> {
+                    Integer waitTime = currentTime - p.getArrivalTime();
+                    return (waitTime + p.getServiceTime()) / p.getServiceTime();
+                }));
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
@@ -89,4 +88,5 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
             process.setResponseTime((scheduledData.getStartAt() + 1) - process.getArrivalTime());
         }
     }
+
 }

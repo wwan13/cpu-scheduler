@@ -1,4 +1,4 @@
-package com.wwan13.cpuscheduler.Processes;
+package com.wwan13.cpuscheduler.processes;
 
 import lombok.*;
 

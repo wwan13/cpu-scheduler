@@ -1,10 +1,10 @@
-package com.wwan13.cpuscheduler.SchedulingAlgorithms;
+package com.wwan13.cpuscheduler.schedulingalgorithms;
 
-import com.wwan13.cpuscheduler.Commons.Att;
-import com.wwan13.cpuscheduler.Commons.Awt;
-import com.wwan13.cpuscheduler.Processes.Process;
-import com.wwan13.cpuscheduler.Processes.ResponseDto;
-import com.wwan13.cpuscheduler.Processes.ScheduledData;
+import com.wwan13.cpuscheduler.commons.Att;
+import com.wwan13.cpuscheduler.commons.Awt;
+import com.wwan13.cpuscheduler.processes.Process;
+import com.wwan13.cpuscheduler.processes.ResponseDto;
+import com.wwan13.cpuscheduler.processes.ScheduledData;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class HrnAlgorithm implements SchedulingAlgorithm {
+@AllArgsConstructor
+public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
     private List<Process> processes;
 
@@ -30,16 +30,16 @@ public class HrnAlgorithm implements SchedulingAlgorithm {
 
         List<Process> readyQueue = this.getReadyQueue();
 
-        while(!readyQueue.isEmpty()) {
+        while (!readyQueue.isEmpty()) {
 
-            Optional<Process> optionalCurrentProcess = this.getHighestResponseRatioProcess(readyQueue, currentTime);
+            Optional<Process> optionalCurrentProcess = this.getFirstPriorityProcess(readyQueue, currentTime);
 
             if (optionalCurrentProcess.isEmpty()) {
                 currentTime += 1;
                 continue;
             }
 
-            Process currentProcess = currentProcess = optionalCurrentProcess.get();
+            Process currentProcess = optionalCurrentProcess.get();
             readyQueue.remove(currentProcess);
 
             ScheduledData scheduledData = ScheduledData.builder()
@@ -50,12 +50,13 @@ public class HrnAlgorithm implements SchedulingAlgorithm {
             scheduledResult.add(scheduledData);
 
             currentTime += currentProcess.getServiceTime();
+
         }
 
         this.calculatePerProcesses(scheduledResult);
 
         ResponseDto responseDto = ResponseDto.builder()
-                .algorithmType("HRN")
+                .algorithmType("NonPreemptivePriority")
                 .processes(this.processes)
                 .scheduledDataList(scheduledResult)
                 .AWT(Awt.calculate(this.processes))
@@ -71,13 +72,10 @@ public class HrnAlgorithm implements SchedulingAlgorithm {
                 .collect(Collectors.toList());
     }
 
-    private Optional<Process> getHighestResponseRatioProcess(List<Process> readyQueue, Integer currentTime) {
+    private Optional<Process> getFirstPriorityProcess(List<Process> readyQueue, Integer currentTime) {
         return readyQueue.stream()
                 .filter((p) -> currentTime >= p.getArrivalTime())
-                .max(Comparator.comparing((p) -> {
-                    Integer waitTime = currentTime - p.getArrivalTime();
-                    return (waitTime + p.getServiceTime()) / p.getServiceTime();
-                }));
+                .min(Comparator.comparing(Process::getPriority));
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
@@ -88,5 +86,4 @@ public class HrnAlgorithm implements SchedulingAlgorithm {
             process.setResponseTime((scheduledData.getStartAt() + 1) - process.getArrivalTime());
         }
     }
-
 }

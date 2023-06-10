@@ -1,6 +1,6 @@
-package com.wwan13.cpuscheduler.Commons;
+package com.wwan13.cpuscheduler.commons;
 
-import com.wwan13.cpuscheduler.Processes.Process;
+import com.wwan13.cpuscheduler.processes.Process;
 
 import java.util.List;
 
