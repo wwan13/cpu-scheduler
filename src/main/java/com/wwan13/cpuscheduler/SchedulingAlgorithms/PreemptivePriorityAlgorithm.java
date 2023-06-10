@@ -33,28 +33,27 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
         while(!readyQueue.isEmpty()) {
 
             Optional<Process> optionalProcess = this.getFirstPriorityProcessAlreadyArrive(readyQueue, currentTime);
-            Process process;
             Integer nextProcessArriveTime = getNextProcessArriveTime(currentTime);
 
             if (optionalProcess.isEmpty()) {
                 currentTime += 1;
                 continue;
-            } else {
-                process = optionalProcess.get();
-                readyQueue.remove(process);
-            }
+            } 
+            
+            Process currentProcess = optionalProcess.get();
+            readyQueue.remove(currentProcess);
 
             ScheduledData scheduledData;
             if (nextProcessArriveTime > currentTime && nextProcessArriveTime != 0xffff) {
 
                 Integer thisServiceTime = nextProcessArriveTime - currentTime;
-                process.setServiceTime(process.getServiceTime() - thisServiceTime);
-                if (process.getServiceTime() > 0) {
-                    readyQueue.add(process);
+                currentProcess.setServiceTime(currentProcess.getServiceTime() - thisServiceTime);
+                if (currentProcess.getServiceTime() > 0) {
+                    readyQueue.add(currentProcess);
                 }
 
                 scheduledData = ScheduledData.builder()
-                        .process(process)
+                        .process(currentProcess)
                         .startAt(currentTime)
                         .endAt(nextProcessArriveTime)
                         .build();
@@ -64,12 +63,12 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
             } else {
 
                 scheduledData = ScheduledData.builder()
-                        .process(process)
+                        .process(currentProcess)
                         .startAt(currentTime)
-                        .endAt(currentTime + process.getServiceTime())
+                        .endAt(currentTime + currentProcess.getServiceTime())
                         .build();
 
-                currentTime += process.getServiceTime();
+                currentTime += currentProcess.getServiceTime();
 
             }
 

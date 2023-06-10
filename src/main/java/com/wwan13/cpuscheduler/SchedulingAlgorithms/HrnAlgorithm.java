@@ -33,15 +33,14 @@ public class HrnAlgorithm implements SchedulingAlgorithm {
         while(!readyQueue.isEmpty()) {
 
             Optional<Process> optionalCurrentProcess = this.getHighestResponseRatioProcess(readyQueue, currentTime);
-            Process currentProcess;
 
             if (optionalCurrentProcess.isEmpty()) {
                 currentTime += 1;
                 continue;
-            } else  {
-                currentProcess = optionalCurrentProcess.get();
-                readyQueue.remove(currentProcess);
             }
+
+            Process currentProcess = currentProcess = optionalCurrentProcess.get();
+            readyQueue.remove(currentProcess);
 
             ScheduledData scheduledData = ScheduledData.builder()
                     .process(currentProcess)

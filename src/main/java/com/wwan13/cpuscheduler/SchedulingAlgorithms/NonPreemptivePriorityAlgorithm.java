@@ -10,6 +10,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Builder
@@ -31,11 +32,15 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
         while (!readyQueue.isEmpty()) {
 
-            Process currentProcess = readyQueue.remove(0);
+            Optional<Process> optionalCurrentProcess = this.getFirstPriorityProcess(readyQueue, currentTime);
 
-            if (currentProcess.getArrivalTime() > currentTime) {
-                currentTime = currentProcess.getArrivalTime();
+            if (optionalCurrentProcess.isEmpty()) {
+                currentTime += 1;
+                continue;
             }
+
+            Process currentProcess = optionalCurrentProcess.get();
+            readyQueue.remove(currentProcess);
 
             ScheduledData scheduledData = ScheduledData.builder()
                     .process(currentProcess)
@@ -62,26 +67,15 @@ public class NonPreemptivePriorityAlgorithm implements SchedulingAlgorithm {
     }
 
     private List<Process> getReadyQueue() {
-
-        Process firstScheduledProcess = this.getFirstScheduledProcess();
-
-        List<Process> readyQueue = this.processes.stream()
-                .filter(a -> !a.equals(firstScheduledProcess))
-                .sorted(Comparator.comparing(Process::getPriority)
-                        .thenComparing(Process::getArrivalTime))
+        return this.processes.stream()
+                .sorted(Comparator.comparing(Process::getArrivalTime))
                 .collect(Collectors.toList());
-
-        readyQueue.add(0, firstScheduledProcess);
-
-        return readyQueue;
-
     }
 
-    private Process getFirstScheduledProcess() {
-        return this.processes.stream()
-                .min(Comparator.comparing(Process::getArrivalTime)
-                        .thenComparing(Process::getPriority))
-                .orElseThrow(() -> new NullPointerException());
+    private Optional<Process> getFirstPriorityProcess(List<Process> readyQueue, Integer currentTime) {
+        return readyQueue.stream()
+                .filter((p) -> currentTime >= p.getArrivalTime())
+                .min(Comparator.comparing(Process::getPriority));
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {

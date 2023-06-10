@@ -29,11 +29,16 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
 
         while(!readyQueue.isEmpty()) {
 
-            Process currentProcess = readyQueue.remove(0);
+            Optional<Process> optionalCurrentProcess = this.getArrivedProcess(readyQueue, currentTime);
 
-            if (currentProcess.getArrivalTime() > currentTime) {
-                currentTime = currentProcess.getArrivalTime();
+            if (optionalCurrentProcess.isEmpty()) {
+                currentTime += 1;
+                continue;
             }
+
+            Process currentProcess = optionalCurrentProcess.get();
+            readyQueue.remove(currentProcess);
+
 
             ScheduledData scheduledData = ScheduledData.builder()
                     .process(currentProcess)
@@ -62,6 +67,12 @@ public class FcfsAlgorithm implements SchedulingAlgorithm{
         return this.processes.stream()
                     .sorted(Comparator.comparing(Process::getArrivalTime))
                     .collect(Collectors.toList());
+    }
+
+    private Optional<Process> getArrivedProcess(List<Process> processes, Integer currentTIme) {
+        return processes.stream()
+                .filter((p) -> currentTIme >= p.getArrivalTime())
+                .findFirst();
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {

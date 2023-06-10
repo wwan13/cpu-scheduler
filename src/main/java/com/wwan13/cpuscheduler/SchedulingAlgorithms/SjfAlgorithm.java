@@ -33,11 +33,15 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
 
         while(!readyQueue.isEmpty()) {
 
-            Process currentProcess = readyQueue.remove(0);
+            Optional<Process> optionalCurrentProcess = this.getShortestJobProcess(readyQueue, currentTime);
 
-            if (currentProcess.getArrivalTime() > currentTime) {
-                currentTime = currentProcess.getArrivalTime();
+            if (optionalCurrentProcess.isEmpty()) {
+                currentTime += 1;
+                continue;
             }
+
+            Process currentProcess = optionalCurrentProcess.get();
+            readyQueue.remove(currentProcess);
 
             ScheduledData scheduledData = ScheduledData.builder()
                     .process(currentProcess)
@@ -66,28 +70,15 @@ public class SjfAlgorithm implements SchedulingAlgorithm{
     }
 
     private List<Process> getReadyQueue() {
-
-        // 가장 먼저 스케줄링될 프로세스
-        Process firstScheduledProcess = this.getFirstScheduledProcess();
-
-        List<Process> readyQueue = this.processes.stream()
-                    .filter(a -> !a.equals(firstScheduledProcess))          // 첫번째로 스케줄링되는 프로세스는 제외
-                    .sorted(Comparator.comparing(Process::getServiceTime)   // 서비스 시간 기준 정렬
-                            .thenComparing(Process::getArrivalTime))        // 같다면 도착 시간 기준 정렬
-                    .collect(Collectors.toList());
-
-        readyQueue.add(0, firstScheduledProcess);
-
-        return readyQueue;
-
+        return this.processes.stream()
+                .sorted(Comparator.comparing(Process::getArrivalTime))
+                .collect(Collectors.toList());
     }
 
-    private Process getFirstScheduledProcess() {
-        return this.processes.stream()
-                .sorted(Comparator.comparing(Process::getArrivalTime)
-                        .thenComparing(Process::getServiceTime))
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException());
+    private Optional<Process> getShortestJobProcess(List<Process> readyQueue, Integer currentTime) {
+        return readyQueue.stream()
+                .filter((p) -> currentTime >= p.getArrivalTime())
+                .min(Comparator.comparing(Process::getServiceTime));
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {

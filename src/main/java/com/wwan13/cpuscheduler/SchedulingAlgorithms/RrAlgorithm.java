@@ -10,6 +10,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Builder
@@ -32,11 +33,15 @@ public class RrAlgorithm implements SchedulingAlgorithm{
 
         while(!readyQueue.isEmpty()) {
 
-            Process currentProcess = readyQueue.remove(0);
+            Optional<Process> optionalCurrentProcess = this.getArrivedProcess(readyQueue, currentTime);
 
-            if (currentProcess.getArrivalTime() > currentTime) {
-                currentTime = currentProcess.getArrivalTime();
+            if(optionalCurrentProcess.isEmpty()) {
+                currentTime += 1;
+                continue;
             }
+
+            Process currentProcess = optionalCurrentProcess.get();
+            readyQueue.remove(currentProcess);
 
             Integer startTime = currentTime;
             Integer endTime;
@@ -76,6 +81,12 @@ public class RrAlgorithm implements SchedulingAlgorithm{
         return this.processes.stream()
                 .sorted(Comparator.comparing(Process::getArrivalTime))
                 .collect(Collectors.toList());
+    }
+
+    private Optional<Process> getArrivedProcess(List<Process> readyQueue, Integer currentTime) {
+        return readyQueue.stream()
+                .filter((p) -> currentTime >= p.getArrivalTime())
+                .findFirst();
     }
 
     private void calculatePerProcesses(List<ScheduledData> scheduledResult) {
