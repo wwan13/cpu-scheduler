@@ -49,7 +49,9 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
                 Integer thisServiceTime = nextProcessArriveTime - currentTime;
                 process.setServiceTime(process.getServiceTime() - thisServiceTime);
-                readyQueue.add(process);
+                if (process.getServiceTime() > 0) {
+                    readyQueue.add(process);
+                }
 
                 scheduledData = ScheduledData.builder()
                         .process(process)
