@@ -32,7 +32,7 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
 
         while(!readyQueue.isEmpty()) {
 
-            Optional<Process> optionalProcess = this.getFirstPriorityProcessAlreadyArrive(readyQueue, currentTime);
+            Optional<Process> optionalProcess = this.getFirstPriorityProcess(readyQueue, currentTime);
             Integer nextProcessArriveTime = getNextProcessArriveTime(currentTime);
 
             if (optionalProcess.isEmpty()) {
@@ -107,7 +107,7 @@ public class PreemptivePriorityAlgorithm implements SchedulingAlgorithm {
                 .orElse(0xffff);
     }
 
-    private Optional<Process> getFirstPriorityProcessAlreadyArrive(List<Process> readyQueue, Integer currentTime) {
+    private Optional<Process> getFirstPriorityProcess(List<Process> readyQueue, Integer currentTime) {
 
         return readyQueue.stream()
                 .filter(a -> a.getArrivalTime() <= currentTime)
